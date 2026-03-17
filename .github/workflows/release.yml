@@ -30,7 +30,7 @@ jobs:
         run: |
           uv venv
           uv pip install -r requirements.txt
-          uv pip install nuitka
+          uv pip install "nuitka[onefile]"
 
       - name: Install dependencies (Linux)
         if: matrix.platform == 'linux'
