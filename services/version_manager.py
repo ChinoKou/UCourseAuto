@@ -64,9 +64,14 @@ class VersionManager:
 
             resp: "Response | None" = None
 
-            # 使用代理
-            if use_proxy:
+            # 不使用代理
+            if not use_proxy:
+                resp = await request(url=url)
+                if not resp:
+                    return await self.get_latest_info(use_proxy=True)
 
+            # 使用代理
+            else:
                 # 检测 Github 代理
                 for proxy in proxy_urls:
                     logger.debug(f"[MANAGER][VERSION] 正在检测 Github 代理: {proxy}")
@@ -92,12 +97,6 @@ class VersionManager:
                         logger.debug(
                             f"[MANAGER][VERSION] Github 代理: {proxy} 不可用, 尝试下一个代理"
                         )
-
-            # 不使用代理
-            else:
-                resp = await request(url=url)
-                if not resp:
-                    return await self.get_latest_info(use_proxy=True)
 
             # 获取失败
             if not resp:
