@@ -4,8 +4,9 @@ from typing import TYPE_CHECKING
 import questionary
 from loguru import logger
 
-from .http_client import HttpClient
 from utils import answer
+
+from .http_client import HttpClient
 
 if TYPE_CHECKING:
     from httpx import Response
@@ -20,7 +21,7 @@ class VersionManager:
         self.client = HttpClient()
 
     async def get_latest_info(
-        self, use_proxy: bool = True
+        self, use_proxy: bool = False
     ) -> tuple[str | None, str | None] | None:
         """
         获取最新版本信息
@@ -92,14 +93,11 @@ class VersionManager:
                             f"[MANAGER][VERSION] Github 代理: {proxy} 不可用, 尝试下一个代理"
                         )
 
-                # 所有代理均不可用
-                if not resp:
-                    logger.warning("所有 Github 代理均不可用, 尝试直接访问")
-                    return await self.get_latest_info(use_proxy=False)
-
             # 不使用代理
             else:
                 resp = await request(url=url)
+                if not resp:
+                    return await self.get_latest_info(use_proxy=True)
 
             # 获取失败
             if not resp:

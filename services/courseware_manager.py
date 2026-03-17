@@ -24,8 +24,9 @@ from models import (
     TextbookInfoAPIResponse,
     TextbookListAPIResponse,
 )
-from .data_manager import DataManager
 from utils import answer, sync_text_decrypt
+
+from .data_manager import DataManager
 
 if TYPE_CHECKING:
     from config import Config
@@ -393,7 +394,18 @@ class CoursewareManager:
                                 # 遍历元素
                                 for element_info in elements:
                                     if not isinstance(element_info, ElementQuestion):
-                                        raise
+                                        logger.warning(f"[章][{chapter_name}]")
+                                        logger.warning(
+                                            f"  |- [节][{section_info.section_name}]"
+                                        )
+                                        logger.warning(
+                                            f"   |- [页面][{page_info.page_name}]"
+                                        )
+                                        logger.warning(
+                                            "以上页面中出现了非题目元素, 请在解析完毕后注意检查"
+                                        )
+                                        input("按回车键继续...")
+                                        continue
 
                                     logger.info(
                                         f"[题目][{page_info.page_name}] 开始解析"
