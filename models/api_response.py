@@ -102,7 +102,7 @@ class StudyRecordAPIResponse(BaseAPIResponse):
             """问题ID = question_id"""
             answerList: list[str]
             """答案列表 = answer_list"""
-            score: int
+            score: float
             """分数"""
 
         pageid: int

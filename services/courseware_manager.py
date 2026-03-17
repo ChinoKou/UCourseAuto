@@ -402,7 +402,7 @@ class CoursewareManager:
                                             f"   |- [页面][{page_info.page_name}]"
                                         )
                                         logger.warning(
-                                            "以上页面中出现了非题目元素, 请在解析完毕后注意检查"
+                                            "以上页面中出现了预期之外的非题目元素, 请在解析完毕后注意检查"
                                         )
                                         input("按回车键继续...")
                                         continue
