@@ -1,6 +1,6 @@
 import os
 import time
-from sys import stderr
+from sys import stdout
 
 from loguru import logger
 
@@ -33,5 +33,5 @@ class LoggerManager:
 
         # 修改日志配置
         logger.remove()
-        for sink, level in {stderr: log_level, self.log_file: "DEBUG"}.items():
+        for sink, level in {stdout: log_level, self.log_file: "DEBUG"}.items():
             logger.add(sink=sink, level=level, format=self.log_format)
