@@ -19,34 +19,11 @@ class BaseAPIResponse(BaseModel):
         :rtype: Self | None
         """
         try:
-            # 尝试验证模型
-            return cls.model_validate(obj=resp_body, extra="forbid")
+            return cls.model_validate(obj=resp_body, extra="allow")
 
         except Exception as e:
             logger.debug(f"{format_exc()}\n[MODEL] 解析失败")
-            logger.warning(f"解析数据过程出错, 尝试兼容多余字段")
-
-            # 尝试兼容多余字段
-            return cls.__try_extra(resp_body)
-
-    @classmethod
-    def __try_extra(cls, resp_body: dict) -> Self | None:
-        """
-        解析API响应数据(兼容多语字段)
-
-        :param resp_body: 响应体
-        :type resp_body: dict
-        :return: 数据模型
-        :rtype: Self | None
-        """
-        try:
-            model_instance = cls.model_validate(obj=resp_body, extra="allow")
-            logger.success("兼容多余字段成功")
-            return model_instance
-
-        except Exception as e:
-            logger.error(f"数据解析失败, 请提供日志并且提交issue反馈")
-            logger.debug(f"{format_exc()}\n[MODEL] 解析失败")
+            logger.warning(f"数据解析失败, 请提供日志并且提交issue反馈")
             return None
 
 
@@ -59,7 +36,6 @@ class QuestionAnswerAPIResponse(BaseAPIResponse):
 
     questionid: int
     """问题ID = question_id"""
-    correctreply: str
     correctAnswerList: list[str]
     """正确答案列表 与 answer_list 性质相同"""
 
@@ -169,12 +145,8 @@ class ChapterInfoAPIResponse(BaseAPIResponse):
                 """
                 parentid: int
                 """页面ID = page_id"""
-                orderIndex: int
                 resourceid: int
                 """资源ID / 视频ID"""
-                skipVideoTitle: int
-                note: str
-                resourceFullurl: str | None = None
 
             class ContentPageDTO(BasePageDTO):
                 """内容元素数据模型"""
@@ -182,8 +154,6 @@ class ChapterInfoAPIResponse(BaseAPIResponse):
                 type: Literal[12]
                 content: str
                 """内容"""
-
-                resourceDTOList: list
 
             class VideoPageDTO(BasePageDTO):
                 """视频元素数据模型"""
@@ -194,22 +164,11 @@ class ChapterInfoAPIResponse(BaseAPIResponse):
                 resourceid: int
                 """视频ID = video_id"""
 
-                resourceContentSize: int
-                videoQuestionDTOList: list
-                knowledgeResourceDTOS: list
-                videoCover: str | None = None
-                srtDTO: dict | None = None
-
             class QuestionPageDTO(BasePageDTO):
                 """问题元素数据模型"""
 
                 class QuestionDTO(BaseModel):
                     """题目数据模型"""
-
-                    class choiceitemModel(BaseModel):
-                        choiceitemid: int
-                        questionid: int
-                        title: str
 
                     questionid: int
                     """问题ID = question_id"""
@@ -225,22 +184,6 @@ class ChapterInfoAPIResponse(BaseAPIResponse):
                     2: "多选题",
                     4: "判断题",
                     """
-                    iscontent: int
-                    hardlevel: int
-                    parentid: int
-                    createtime: str
-                    updatetime: str
-                    remark: str
-                    userid: int
-                    orgid: int
-                    isShare: int
-                    blankOrder: int
-                    choiceitemModels: list[choiceitemModel] | None = None
-                    tagList: list
-                    link: str | None = None
-                    linkList: list | None = None
-                    linkOptionList: dict | None = None
-                    relatedTextbookChapterDTOList: list
 
                 type: Literal[6]
                 content: str
@@ -254,11 +197,6 @@ class ChapterInfoAPIResponse(BaseAPIResponse):
                 content: str
                 """内容"""
 
-                resourceContentSize: int
-                docTitle: str
-                docSize: int
-                knowledgeResourceDTOS: list
-
             id: int
             """页面ID = page_id"""
             relationid: int
@@ -271,11 +209,6 @@ class ChapterInfoAPIResponse(BaseAPIResponse):
             contentnodeid: int
             """节ID = section_id"""
             type: int
-            orderindex: int
-            lastmodifydate: str
-            share: int
-            status: int
-            qrcode: int
 
             coursepageDTOList: list[
                 Annotated[
