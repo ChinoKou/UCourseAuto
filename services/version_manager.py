@@ -17,7 +17,7 @@ class VersionManager:
 
     def __init__(self) -> None:
         """版本管理类初始化"""
-        self.tag = "v1.1.8"  # 硬编码
+        self.tag = "v1.1.9"  # 硬编码
         self.client = HttpClient()
 
     async def get_latest_info(
