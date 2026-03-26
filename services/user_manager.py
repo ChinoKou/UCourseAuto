@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 import questionary
 from loguru import logger
+
 from apis import LoginAPI
 from models import UserAPI, UserConfig
 from utils import answer
@@ -81,7 +82,7 @@ class UserManager:
             logger.error(f"{format_exc()}\n[MANAGER][USER] 用户管理出现异常: {e}")
             return None
 
-    async def __login(self, user_config: UserConfig) -> bool:
+    async def __login(self, user_config: UserConfig, retry: int = 0) -> bool:
         """
         执行登录
 
@@ -121,22 +122,19 @@ class UserManager:
                 self.users[user_config.username] = UserAPI(
                     user_config=user_config, login_api=login_api
                 )
+                logger.success(f"登录成功: {user_config.username}")
                 return True
 
+            elif retry >= 3:
+                logger.error(f"登录失败: {user_config.username}")
+                return False
+
             # 登录
+            await http_client.reset_client()
             user_info_resp = await login_api.login()
 
             # 保存用户信息
             if user_info_resp:
-                # 设置活跃用户和Http客户端
-                self.config.active_user = user_config.username
-                self.active_client = http_client
-
-                # 设置用户API
-                self.users[user_config.username] = UserAPI(
-                    user_config=user_config, login_api=login_api
-                )
-
                 # 保存用户信息
                 cookies = http_client.get_cookies()
                 user_config.cookies = cookies
@@ -144,12 +142,9 @@ class UserManager:
                 self.config.active_user = user_config.username
                 self.config.save()
 
-                logger.success(f"登录成功: {user_config.username}")
+                return await self.__login(user_config=user_config, retry=retry + 1)
 
-                return True
-
-            else:
-                logger.error("登录失败")
+            logger.error("登录失败")
 
             return False
 

@@ -4,6 +4,12 @@ from traceback import format_exc
 import httpx
 from loguru import logger
 
+USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+)
+
 
 class HttpClient:
     """内部Http客户端"""
@@ -23,17 +29,12 @@ class HttpClient:
         """
 
         self.debug = debug
-        self.__client = httpx.AsyncClient(verify=not self.debug)
-        USER_AGENT = (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
-        )
-        headers = {"User-Agent": USER_AGENT}
-        if token != "abc":
-            headers["Authorization"] = token
+        self.__client = self.__create_default_client(debug)
 
-        self.__client.headers.update(headers)
+        if token != "abc":
+            headers = {"Authorization": token}
+            self.__client.headers.update(headers)
+
         if cookies:
             self.__client.cookies.update(cookies)
 
@@ -242,6 +243,40 @@ class HttpClient:
             logger.error(f"{format_exc()}\n[HTTP] 复制Http客户端出错: {e}")
             return None
 
+    def __create_default_client(self, debug: bool) -> httpx.AsyncClient:
+        """
+        创建默认的Http客户端
+
+        :param debug: 是否为调试模式
+        :type debug: bool
+        :return: Http客户端对象
+        :rtype: httpx.AsyncClient
+        """
+        headers = {"User-Agent": USER_AGENT}
+        client = httpx.AsyncClient(verify=not debug)
+        client.headers.update(headers)
+        return client
+
+    async def reset_client(self) -> bool:
+        """
+        重置Http客户端
+
+        :return: 是否重置成功
+        :rtype: bool
+
+        """
+        logger.debug("[HTTP] 重置Http客户端")
+
+        try:
+            # 关闭旧的内部客户端并创建新的内部客户端
+            await self.__client.aclose()
+            self.__client = self.__create_default_client(self.debug)
+            return True
+
+        except Exception as e:
+            logger.error(f"{format_exc()}\n[HTTP] 重置Http客户端出错: {e}")
+            return False
+
     async def re_create_client(
         self, token: str = "abc", cookies: dict | None = None, debug: bool = False
     ) -> bool:
@@ -262,7 +297,7 @@ class HttpClient:
 
         try:
             # 创建新的内部客户端AsyncClient
-            new_client = httpx.AsyncClient(verify=not debug)
+            new_client = self.__create_default_client(debug)
 
             # 初始化请求头和Cookie
             if token != "abc":
