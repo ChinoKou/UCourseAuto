@@ -1,30 +1,32 @@
 # UCourseAuto
 
-## What is UCourseAuto?
+[English](README.en.md) | 简体中文
 
-UCourseAuto is an automated CLI tool for completing courseware on the ULearning platform.
+## UCourseAuto 是什么？
 
-## Features
+UCourseAuto 是一个用于自动完成 优学院 平台课件的命令行自动化工具。
 
-- Video watching with simulated progress
-- Question answering with automatic solution lookup
-- Document reading simulation
-- Content page completion
-- Customizable study time
-- Multiple users support
-- Modify courseware configuration
+## 功能特性
 
-## Support Sites
+- 视频观看（模拟观看进度）
+- 答题（自动查询答案）
+- 文档阅读模拟
+- 纯文本页面完成
+- 自定义学习时长
+- 多用户支持
+- 课件配置修改
 
-- [ULearning](https://www.ulearning.cn)
-- [DGUT](https://lms.dgut.edu.cn)
+## 支持站点
 
-## Usage
+- 优学院主站 https://www.ulearning.cn
+- 东莞理工学院 https://lms.dgut.edu.cn
 
-- Download the [latest release](https://github.com/ChinoKou/UCourseAuto/releases/latest) binary from the releases page and run it directly
-- Clone the repository and run with Python 3.12+ directly
+## 使用方法
 
-## How It Works
+- 从 [Releases 页面](https://github.com/ChinoKou/UCourseAuto/releases/latest) 下载最新的二进制文件，直接运行
+- 克隆本仓库，使用 Python 3.12+ 直接运行
+
+## 工作原理
 
 ```mermaid
 sequenceDiagram
@@ -83,9 +85,9 @@ sequenceDiagram
     deactivate CM
 ```
 
-## Terms and Conditions
+## 使用条款
 
-By using this tool, you acknowledge that you understand the risks associated with using automation tools on ULearning platforms, and accept the following terms and conditions:
+使用本工具即表示你已知晓在 优学院 平台上使用自动化工具的相关风险，并接受以下条款：
 
-- The author does not guarantee that using this tool will not be detected by the ULearning platform
-- Any consequences arising from the use of this tool, including but not limited to disciplinary action, are solely the responsibility of the user
+- 作者不保证使用本工具不会被 优学院 平台检测到
+- 因使用本工具产生的一切后果（包括但不限于纪律处分）均由用户自行承担
