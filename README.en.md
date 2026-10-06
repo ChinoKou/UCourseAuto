@@ -23,8 +23,51 @@ UCourseAuto is an automated CLI tool for completing courseware on the ULearning 
 
 ## Usage
 
-- Download the [latest release](https://github.com/ChinoKou/UCourseAuto/releases/latest) binary from the releases page and run it directly
-- Clone the repository and run with Python 3.12+ directly
+### Run from Binary
+
+Download the latest executable from the [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) page and run it directly — no Python setup required.
+
+### Run from Source
+
+[uv](https://docs.astral.sh/uv/) is recommended for managing the Python environment and dependencies:
+
+```bash
+git clone https://github.com/ChinoKou/UCourseAuto.git
+cd UCourseAuto
+uv sync
+uv run main.py
+```
+
+<details>
+<summary>No uv yet? Click to see the install commands</summary>
+
+Linux / macOS:
+
+`curl -LsSf https://astral.sh/uv/install.sh | sh`
+
+Windows (PowerShell):
+
+`powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+
+</details>
+
+Alternatively, set up the environment the traditional way with pip:
+
+```bash
+# Create a virtual environment
+python -m venv .venv
+
+# Activate it (Linux / macOS)
+source .venv/bin/activate
+# Activate it (Windows)
+.venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run with the environment activated
+python main.py
+```
 
 ## How It Works
 

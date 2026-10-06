@@ -1,7 +1,7 @@
-httpx
-loguru
-pyyaml
-pydantic
-py-machineid
-pycryptodome
-questionary
+httpx>=0.28.1
+loguru>=0.7.3
+py-machineid>=1.0.0
+pycryptodome>=3.24.0
+pydantic>=2.13.5
+pyyaml>=6.0.3
+questionary>=2.1.1

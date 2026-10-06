@@ -23,8 +23,51 @@ UCourseAuto 是一个用于自动完成 优学院 平台课件的命令行自动
 
 ## 使用方法
 
-- 从 [Releases 页面](https://github.com/ChinoKou/UCourseAuto/releases/latest) 下载最新的二进制文件，直接运行
-- 克隆本仓库，使用 Python 3.12+ 直接运行
+### 二进制运行
+
+前往 [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) 页面下载最新的可执行文件，无需配置 Python 环境，下载后直接运行。
+
+### 源码运行
+
+推荐使用 [uv](https://docs.astral.sh/uv/) 管理 Python 环境与依赖：
+
+```bash
+git clone https://github.com/ChinoKou/UCourseAuto.git
+cd UCourseAuto
+uv sync
+uv run main.py
+```
+
+<details>
+<summary>尚未安装 uv？展开查看安装命令</summary>
+
+Linux / macOS：
+
+`curl -LsSf https://astral.sh/uv/install.sh | sh`
+
+Windows（PowerShell）：
+
+`powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+
+</details>
+
+如果不使用 uv，也可以按传统方式用 pip 手动准备环境：
+
+```bash
+# 创建虚拟环境
+python -m venv .venv
+
+# 激活虚拟环境（Linux / macOS）
+source .venv/bin/activate
+# 激活虚拟环境（Windows）
+.venv\Scripts\activate
+
+# 安装依赖
+pip install -r requirements.txt
+
+# 激活状态下运行
+python main.py
+```
 
 ## 工作原理
 

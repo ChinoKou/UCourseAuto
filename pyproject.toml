@@ -1,0 +1,36 @@
+[project]
+name = "ucourseauto"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "loguru>=0.7.3",
+    "py-machineid>=1.0.0",
+    "pycryptodome>=3.24.0",
+    "pydantic>=2.13.5",
+    "pyyaml>=6.0.3",
+    "questionary>=2.1.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.10",
+    "ty>=0.0.84",
+]
+
+[[tool.uv.index]]
+name = "aliyun"
+url = "https://mirrors.aliyun.com/pypi/simple"
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
+[tool.ty.environment]
+python-version = "3.12"
+
+[tool.ty.src]
+include = ["main.py", "config.py", "utils.py", "apis", "logic", "schema", "tests"]
+exclude = ["build"]
