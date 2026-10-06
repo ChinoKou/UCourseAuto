@@ -5,11 +5,11 @@ from urllib.parse import unquote
 
 from loguru import logger
 
-from models import APIUrl, LoginAPIUserInfoResponse, UserConfig
+from schema import APIUrl, LoginAPIUserInfoResponse, UserConfig
 
 if TYPE_CHECKING:
     from config import Config
-    from services import HttpClient
+    from logic import HttpClient
 
 
 class LoginAPI:

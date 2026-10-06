@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from loguru import logger
 
 from config import Config
-from models import (
+from schema import (
     APIUrl,
     ChapterInfoAPIResponse,
     CourseAPIUserInfoAPIResponse,
@@ -19,7 +19,7 @@ from utils import sync_text_encrypt
 
 if TYPE_CHECKING:
     from config import Config
-    from services import HttpClient
+    from logic import HttpClient
 
 
 class CourseAPI:

@@ -4,7 +4,7 @@ from traceback import format_exc
 import yaml
 from loguru import logger
 
-from models import ConfigModel
+from schema import ConfigModel
 from utils import config_text_decrypt, config_text_encrypt
 
 

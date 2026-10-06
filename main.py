@@ -8,7 +8,7 @@ import questionary
 from loguru import logger
 
 from config import Config
-from services import (
+from logic import (
     ConfigManager,
     CoursewareManager,
     UserManager,
@@ -18,7 +18,7 @@ from services import (
 from utils import answer
 
 if TYPE_CHECKING:
-    from services import HttpClient
+    from logic import HttpClient
 
 
 class Main:
