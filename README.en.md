@@ -6,6 +6,10 @@ English | [简体中文](README.md)
 
 UCourseAuto is an automated CLI tool for completing courseware on the ULearning platform.
 
+## Repository Structure
+
+The CLI tool lives in the `cli/` directory as a standalone subproject with its own uv project files (`pyproject.toml`, `uv.lock`, `requirements.txt`). The source-run commands and data-file notes below are relative to `cli/`.
+
 ## Features
 
 - Video watching with simulated progress
@@ -34,7 +38,7 @@ Download the latest executable from the [Releases](https://github.com/ChinoKou/U
 
 ```bash
 git clone https://github.com/ChinoKou/UCourseAuto.git
-cd UCourseAuto
+cd UCourseAuto/cli
 uv sync
 uv run main.py
 ```
@@ -57,6 +61,9 @@ Windows (PowerShell):
 Alternatively, set up the environment the traditional way with pip:
 
 ```bash
+# Enter the cli subproject directory
+cd UCourseAuto/cli
+
 # Create a virtual environment
 python -m venv .venv
 
@@ -74,7 +81,7 @@ python main.py
 
 ## Configuration and Data Files
 
-The program generates local data under the `ucourse_data/` directory:
+The program generates local data under the `cli/ucourse_data/` directory:
 
 - `ucourse_config.json`: the configuration file, stored as plain JSON. Note: the account password is stored in plain text in this file. Keep the `ucourse_data/` directory private and never share it with others.
 - `ucourse_logs/`: the runtime log directory.

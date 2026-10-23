@@ -6,6 +6,10 @@
 
 UCourseAuto 是一个用于自动完成 优学院 平台课件的命令行自动化工具。
 
+## 仓库结构
+
+命令行工具位于 `cli/` 目录，作为独立子项目自带 uv 工程配置（`pyproject.toml`、`uv.lock`、`requirements.txt`），下文的源码运行命令与数据文件说明均以 `cli/` 为根。
+
 ## 功能特性
 
 - 视频观看（模拟观看进度）
@@ -34,7 +38,7 @@ UCourseAuto 是一个用于自动完成 优学院 平台课件的命令行自动
 
 ```bash
 git clone https://github.com/ChinoKou/UCourseAuto.git
-cd UCourseAuto
+cd UCourseAuto/cli
 uv sync
 uv run main.py
 ```
@@ -57,6 +61,9 @@ Windows（PowerShell）：
 如果不使用 uv，也可以按传统方式用 pip 手动准备环境：
 
 ```bash
+# 进入 cli 子项目目录
+cd UCourseAuto/cli
+
 # 创建虚拟环境
 python -m venv .venv
 
@@ -74,7 +81,7 @@ python main.py
 
 ## 配置与数据文件
 
-程序运行时在 `ucourse_data/` 目录下生成本地数据：
+程序运行时在 `cli/ucourse_data/` 目录下生成本地数据：
 
 - `ucourse_config.json`：配置文件，JSON 明文保存。注意：账号密码以明文形式保存在该文件中，请自行妥善保管，不要将 `ucourse_data/` 目录分享给他人。
 - `ucourse_logs/`：运行日志目录。

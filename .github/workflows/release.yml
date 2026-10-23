@@ -9,6 +9,9 @@ jobs:
   build:
     name: Build ${{ matrix.platform }}
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: cli
     strategy:
       matrix:
         include:
@@ -61,7 +64,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: UCourseAuto_${{ matrix.platform }}
-          path: UCourseAuto_${{ matrix.platform }}_${{ github.ref_name }}${{ matrix.ext }}
+          path: cli/UCourseAuto_${{ matrix.platform }}_${{ github.ref_name }}${{ matrix.ext }}
           retention-days: 1
 
   release:
