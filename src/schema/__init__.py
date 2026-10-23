@@ -1,5 +1,5 @@
-from .api_request import SyncStudyRecordAPIRequest
-from .api_response import (
+from src.schema.api_request import SyncStudyRecordAPIRequest
+from src.schema.api_response import (
     ChapterInfoAPIResponse,
     CourseAPIUserInfoAPIResponse,
     CourseListAPIResponse,
@@ -9,10 +9,10 @@ from .api_response import (
     TextbookInfoAPIResponse,
     TextbookListAPIResponse,
 )
-from .common import APIUrl, UserAPI
-from .config import ConfigModel, UserConfig
-from .course import ModelCourse, ModelTextbook
-from .courseware import (
+from src.schema.common import APIUrl, UserAPI
+from src.schema.config import ConfigModel, UserConfig
+from src.schema.course import ModelCourse, ModelTextbook
+from src.schema.courseware import (
     CoursewareChapter,
     CoursewarePage,
     CoursewareSection,
@@ -23,21 +23,11 @@ from .courseware import (
 )
 
 __all__ = [
-    "SyncStudyRecordAPIRequest",
+    "APIUrl",
     "ChapterInfoAPIResponse",
+    "ConfigModel",
     "CourseAPIUserInfoAPIResponse",
     "CourseListAPIResponse",
-    "LoginAPIUserInfoResponse",
-    "QuestionAnswerAPIResponse",
-    "StudyRecordAPIResponse",
-    "TextbookInfoAPIResponse",
-    "TextbookListAPIResponse",
-    "APIUrl",
-    "UserAPI",
-    "ConfigModel",
-    "UserConfig",
-    "ModelCourse",
-    "ModelTextbook",
     "CoursewareChapter",
     "CoursewarePage",
     "CoursewareSection",
@@ -45,4 +35,14 @@ __all__ = [
     "ElementDocumen",
     "ElementQuestion",
     "ElementVideo",
+    "LoginAPIUserInfoResponse",
+    "ModelCourse",
+    "ModelTextbook",
+    "QuestionAnswerAPIResponse",
+    "StudyRecordAPIResponse",
+    "SyncStudyRecordAPIRequest",
+    "TextbookInfoAPIResponse",
+    "TextbookListAPIResponse",
+    "UserAPI",
+    "UserConfig",
 ]

@@ -8,7 +8,9 @@ from loguru import logger
 class LoggerManager:
     """日志管理类"""
 
-    def __init__(self, dir_name: str = "ucourse_logs") -> None:
+    def __init__(
+        self, dir_name: str = os.path.join("ucourse_data", "ucourse_logs")
+    ) -> None:
         """
         日志管理类初始化
 
@@ -18,7 +20,7 @@ class LoggerManager:
         # 创建日志目录
         log_dir = os.path.join(os.getcwd(), dir_name)
         if not os.path.exists(log_dir):
-            os.mkdir(log_dir)
+            os.makedirs(log_dir, exist_ok=True)
 
         # 初始化日志配置
         start_time = time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime())

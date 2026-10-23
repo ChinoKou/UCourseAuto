@@ -31,6 +31,12 @@ default = true
 [tool.ty.environment]
 python-version = "3.12"
 
+[tool.ty.rules]
+possibly-unresolved-reference = "error"
+
+[tool.ruff.lint]
+ignore = ["BLE001"]
+
 [tool.ty.src]
-include = ["main.py", "config.py", "utils.py", "apis", "logic", "schema", "tests"]
+include = ["main.py", "src"]
 exclude = ["build"]

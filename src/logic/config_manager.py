@@ -4,12 +4,12 @@ from typing import TYPE_CHECKING
 import questionary
 from loguru import logger
 
-from .http_client import HttpClient
-from .logger_manager import LoggerManager
-from utils import answer
+from src.logic.http_client import HttpClient
+from src.logic.logger_manager import LoggerManager
+from src.utils import answer
 
 if TYPE_CHECKING:
-    from config import Config
+    from src.logic.config import Config
 
 
 class ConfigManager:
@@ -48,7 +48,6 @@ class ConfigManager:
             "修改上报冷却": self.__change_sleep_time,
             "重新读取配置文件": self.__reload_config,
             "重新写入配置文件": self.__rewrite_config,
-            "返回": lambda: None,
         }
 
         try:
@@ -62,13 +61,13 @@ class ConfigManager:
                 )
 
                 if choice == "返回":
-                    return None
+                    return
 
                 await choices_map[choice]()
 
         except Exception as e:
             logger.error(f"{format_exc()}\n[MANAGER][CONFIG] 配置管理菜单出错: {e}")
-            return None
+            return
 
     async def __change_debug_mode(self) -> None:
         """修改调试模式"""
@@ -84,7 +83,7 @@ class ConfigManager:
                 )
             )
             if choice == "返回":
-                return None
+                return
 
             if choice == "开启":
                 # 修改配置文件
@@ -96,7 +95,7 @@ class ConfigManager:
 
                 # 重新创建 HttpClient 内部的客户端
                 if not await self.client.re_create_client(debug=True):
-                    raise
+                    raise RuntimeError("重新创建 HttpClient 内部客户端失败")
 
                 logger.success("已开启调试模式")
 
@@ -110,13 +109,13 @@ class ConfigManager:
 
                 # 重新创建 HttpClient 内部的客户端
                 if not await self.client.re_create_client(debug=False):
-                    raise
+                    raise RuntimeError("重新创建 HttpClient 内部客户端失败")
 
                 logger.success("已关闭调试模式")
 
         except Exception as e:
             logger.error(f"{format_exc()}\n[MANAGER][CONFIG] 修改调试模式出错: {e}")
-            return None
+            return
 
     async def __change_sleep_time(self) -> None:
         """修改上报冷却"""
@@ -128,9 +127,11 @@ class ConfigManager:
                 questionary.text(
                     message=f"[当前值: {current_sleep_time}s]请输入新的上报冷却时间(秒):",
                     default=str(1.0),
-                    validate=lambda x: x.replace(".", "", 1).isdigit()
-                    and 0 <= float(x) <= 10
-                    or "请输入正确的数字(0~10)",
+                    validate=lambda x: (
+                        x.replace(".", "", 1).isdigit()
+                        and 0 <= float(x) <= 10
+                        or "请输入正确的数字(0~10)"
+                    ),
                 )
             )
             self.config.sleep_time = float(new_sleep_time)
@@ -140,7 +141,7 @@ class ConfigManager:
 
         except Exception as e:
             logger.error(f"{format_exc()}\n[MANAGER][CONFIG] 修改上报冷却出错: {e}")
-            return None
+            return
 
     async def __reload_config(self) -> None:
         """重新读取配置文件"""
@@ -156,7 +157,7 @@ class ConfigManager:
 
         except Exception as e:
             logger.error(f"{format_exc()}\n[MANAGER][CONFIG] 重新读取配置文件出错: {e}")
-            return None
+            return
 
     async def __rewrite_config(self) -> None:
         """重新写入配置文件"""
@@ -168,4 +169,4 @@ class ConfigManager:
 
         except Exception as e:
             logger.error(f"{format_exc()}\n[MANAGER][CONFIG] 重新写入配置文件出错: {e}")
-            return None
+            return

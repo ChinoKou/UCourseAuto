@@ -4,7 +4,7 @@ from traceback import format_exc
 
 from loguru import logger
 
-from schema import (
+from src.schema import (
     ChapterInfoAPIResponse,
     ConfigModel,
     CourseAPIUserInfoAPIResponse,
@@ -157,8 +157,6 @@ class DataManager:
                 for page_info in section_info.wholepageDTOList:
                     # 创建引用
                     page_id = page_info.id
-                    page_relation_id = page_info.relationid
-                    page_name = page_info.content
                     page_content_type = page_info.contentType
                     course_config_elements = course_config_pages[page_id].elements
 
@@ -235,7 +233,7 @@ class DataManager:
                                 ElementQuestion(questions=questions)
                             )
 
-            logger.debug(f"[MANAGER][DATA] 解析章节信息成功")
+            logger.debug("[MANAGER][DATA] 解析章节信息成功")
             return True
 
         except Exception as e:
@@ -260,7 +258,7 @@ class DataManager:
         :return: 解析是否成功
         :rtype: bool
         """
-        logger.debug(f"[MANAGER][DATA] 解析学习记录信息")
+        logger.debug("[MANAGER][DATA] 解析学习记录信息")
 
         try:
             # 创建引用
@@ -277,12 +275,12 @@ class DataManager:
                 page_is_complete = page_info.complete
 
                 # 遍历配置文件课件对象的所有页面信息以匹配 relation_id
-                for course_page_id, course_page_info in course_config_pages.items():
+                for course_page_info in course_config_pages.values():
                     if course_page_info.page_relation_id == page_relation_id:
                         # 设置页面完成状态
                         course_page_info.is_complete = bool(page_is_complete)
 
-            logger.debug(f"[MANAGER][DATA] 解析学习记录信息成功")
+            logger.debug("[MANAGER][DATA] 解析学习记录信息成功")
             return True
 
         except Exception as e:
@@ -313,7 +311,7 @@ class DataManager:
         :return: 同步学习记录请求数据模型
         :rtype: SyncStudyRecordAPIRequest | None
         """
-        logger.debug(f"[MANAGER][DATA] 构造同步学习记录请求")
+        logger.debug("[MANAGER][DATA] 构造同步学习记录请求")
 
         try:
             # 创建引用

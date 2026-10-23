@@ -13,12 +13,13 @@ UCourseAuto 是一个用于自动完成 优学院 平台课件的命令行自动
 - 文档阅读模拟
 - 纯文本页面完成
 - 自定义学习时长
+- 反刷课检测（可选，默认关闭，见下文说明）
 - 多用户支持
 - 课件配置修改
 
 ## 支持站点
 
-- 优学院主站 https://www.ulearning.cn
+- 优学院主站 https://www.ulearning.cn （维护者手头没有可用于调试的主站数据，主站可用性无法持续验证，欢迎 PR）
 - 东莞理工学院 https://lms.dgut.edu.cn
 
 ## 使用方法
@@ -37,6 +38,8 @@ cd UCourseAuto
 uv sync
 uv run main.py
 ```
+
+备选启动方式：`uv run python -m src.main`
 
 <details>
 <summary>尚未安装 uv？展开查看安装命令</summary>
@@ -69,6 +72,28 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## 配置与数据文件
+
+程序运行时在 `ucourse_data/` 目录下生成本地数据：
+
+- `ucourse_config.json`：配置文件，JSON 明文保存。注意：账号密码以明文形式保存在该文件中，请自行妥善保管，不要将 `ucourse_data/` 目录分享给他人。
+- `ucourse_logs/`：运行日志目录。
+
+旧版本在项目根目录生成的 `ucourse_config.yaml` 会在首次运行时自动迁移为新配置（迁移后配置带版本号，旧文件会被移除），无需手动处理。
+
+## 反刷课检测（可选，默认关闭）
+
+在课件管理菜单中选择「反刷课检测」可以开启该功能。开启后，每个教材的上报分为两段：
+
+1. 第一段：将所有页面的学习时长以 0 上报。据观察，第一次刷完一个教材并且用户在前端查询时会触发平台的 information 接口，该接口会触发刷课检测；此时平台侧记录的学习时长为 0，可以尝试短路这次检测（该接口的客户端超时为 120 秒）。
+2. 第二段：上报真实的学习时长。系统判定完成之后，老师可能会查看学习时长，因此需要补上真实时长。
+
+注意事项：
+
+- 该功能基于对平台前端行为的观察，平台随时可能调整策略，不保证一直有效。
+- 第一段上报进行时若出现网络错误且重试耗尽，已上报节的学习进度会丢失。
+- 若第一段上报完成后中断刷课，课件将处于 0 时长但已完成的状态，容易被老师等人工排查发现。
+
 ## 工作原理
 
 ```mermaid
@@ -84,8 +109,16 @@ sequenceDiagram
     User->>Main: Select "Start Courseware"
     Main->>CM: Invoke __start_course_ware()
     activate CM
-    
+
     Note over CM: Load UserConfig<br/>Iterate: Course -> Textbook -> Chapter -> Section
+
+    opt Anti-detection enabled (per Textbook, off by default)
+        Note over CM: First pass: sync with studyTime = 0<br/>for every page
+        CM->>API: textbook_information(course_id, textbook_id)
+        API->>Server: GET /textbook/student/information (timeout 120s)
+        Note right of API: Triggers server-side courseware detection,<br/>short-circuited by the 0-duration records
+        API-->>CM: Refresh status
+    end
 
     loop Every "Section"
         CM->>API: initialize_section(section_id)

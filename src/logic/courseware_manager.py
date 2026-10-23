@@ -7,8 +7,9 @@ from typing import TYPE_CHECKING
 import questionary
 from loguru import logger
 
-from apis import CourseAPI
-from schema import (
+from src.apis import CourseAPI
+from src.logic.data_manager import DataManager
+from src.schema import (
     ChapterInfoAPIResponse,
     ConfigModel,
     CourseAPIUserInfoAPIResponse,
@@ -24,13 +25,11 @@ from schema import (
     TextbookInfoAPIResponse,
     TextbookListAPIResponse,
 )
-from utils import answer, sync_text_decrypt
-
-from .data_manager import DataManager
+from src.utils import answer, sync_text_decrypt
 
 if TYPE_CHECKING:
-    from config import Config
-    from logic import HttpClient
+    from src.logic import HttpClient
+    from src.logic.config import Config
 
 
 class CoursewareManager:
@@ -65,6 +64,7 @@ class CoursewareManager:
             "查看刷课信息",
             "删除课件",
             "修改刷课上报时长",
+            "反刷课检测",
             "清理已刷完课程",
             "返回",
         ]
@@ -74,6 +74,7 @@ class CoursewareManager:
             "查看刷课信息": self.__print_courseware_info,
             "删除课件": self.__remove_courseware,
             "修改刷课上报时长": self.__modify_study_time,
+            "反刷课检测": self.__toggle_anti_detection,
             "清理已刷完课程": self.__prune_completed_courseware,
             "解密同步学习记录请求数据": self.__decrypt_sync_study_record_request,
             "返回": lambda: None,
@@ -93,19 +94,19 @@ class CoursewareManager:
                 )
 
                 if choice == "返回":
-                    return None
+                    return
 
                 await choices_map[choice]()
 
-        except KeyboardInterrupt as e:
+        except KeyboardInterrupt:
             logger.info("[MANAGER][COURSEWARE] 用户强制退出课程管理")
-            return None
+            return
 
         except Exception as e:
             logger.error(
                 f"{format_exc()}\n[MANAGER][COURSEWARE] 课程管理菜单出现异常: {e}"
             )
-            return None
+            return
 
     async def __courseware_config(self) -> None:
         """课件配置"""
@@ -115,7 +116,7 @@ class CoursewareManager:
             # 获取用户的课程列表
             courses = await self.course_api.get_courses()
             if not courses:
-                return None
+                return
 
             # 生成课程选项 list["[课程ID] 课程名称"]
             course_choices = [
@@ -157,7 +158,6 @@ class CoursewareManager:
                 selected_course_id,
                 selected_course_info,
             ) in selected_course_infos.items():
-
                 # 获取教材
                 textbooks = await self.course_api.get_textbooks(
                     course_id=selected_course_id
@@ -185,7 +185,7 @@ class CoursewareManager:
 
             if not textbook_choices:
                 logger.warning("没有可配置的教材")
-                return None
+                return
 
             # 获取用户选择的教材
             raw_selected_textbook_ids: list[str] = await answer(
@@ -227,7 +227,7 @@ class CoursewareManager:
                         )
                         for selected_textbook_id, selected_textbook_info in selected_textbook_infos.items()
                         if selected_textbook_id
-                        in selected_course_textbook_infos[course_id].keys()
+                        in selected_course_textbook_infos[course_id]
                     },
                 )
                 for course_id, course_info in selected_course_infos.items()
@@ -244,7 +244,7 @@ class CoursewareManager:
 
         except Exception as e:
             logger.error(f"{format_exc()}\n[MANAGER][COURSEWARE] 课件配置出错: {e}")
-            return None
+            return
 
     async def __complete_courseware(
         self, course_config: dict[int, ModelCourse]
@@ -275,6 +275,10 @@ class CoursewareManager:
             # 解析异步调度信息
             parsed_textbook_infos: dict[int, TextbookInfoAPIResponse] = {}
             for result in results_get_textbook_info:
+                # 跳过获取失败的教材信息
+                if not result:
+                    continue
+
                 for textbook_id, textbook_info in result.items():
                     parsed_textbook_infos[textbook_id] = textbook_info
 
@@ -284,7 +288,6 @@ class CoursewareManager:
 
             # 遍历教材
             for textbook_id, textbook_info in textbooks.items():
-
                 # 获取教材信息
                 resp_textbook_info = parsed_textbook_infos[textbook_id]
 
@@ -297,7 +300,7 @@ class CoursewareManager:
 
                 # 解析教材信息
                 self.data_manager.parse_textbook_info(
-                    course_config=course_config[course_id],
+                    course_config=course_info,
                     textbook_info=resp_textbook_info,
                 )
 
@@ -322,6 +325,10 @@ class CoursewareManager:
                 # 解析异步调度信息
                 parsed_chapter_infos: dict[int, ChapterInfoAPIResponse] = {}
                 for result in results_get_chapter_info:
+                    # 跳过获取失败的章节信息
+                    if not result:
+                        continue
+
                     for chapter_id, chapter_info in result.items():
                         parsed_chapter_infos[chapter_id] = chapter_info
 
@@ -342,7 +349,7 @@ class CoursewareManager:
 
                     # 解析章节信息
                     self.data_manager.parse_chapter_info(
-                        course_config=course_config[course_id],
+                        course_config=course_info,
                         textbook_id=textbook_id,
                         chapter_info=resp_chapter_info,
                     )
@@ -434,6 +441,10 @@ class CoursewareManager:
                                         int, QuestionAnswerAPIResponse
                                     ] = {}
                                     for result in results_get_question_answer_list:
+                                        # 跳过获取失败的答案列表
+                                        if not result:
+                                            continue
+
                                         for (
                                             question_id,
                                             question_answer_list,
@@ -460,7 +471,9 @@ class CoursewareManager:
                                             logger.warning(
                                                 f"尝试获取问题 ID-{question_id} 答案列表失败"
                                             )
-                                            raise
+                                            raise RuntimeError(
+                                                f"获取问题 ID-{question_id} 答案列表失败"
+                                            )
 
                                         # 补全答案列表
                                         question_info.question_answer_list = (
@@ -486,7 +499,7 @@ class CoursewareManager:
 
                         # 解析学习记录信息
                         self.data_manager.parse_study_record_info(
-                            course_config=course_config[course_id],
+                            course_config=course_info,
                             textbook_id=textbook_id,
                             study_record_info=resp_study_record_info,
                         )
@@ -537,7 +550,7 @@ class CoursewareManager:
 
             return False
 
-        except Exception as e:
+        except Exception:
             return False
 
     async def __start_courseware(self) -> None:
@@ -589,10 +602,9 @@ class CoursewareManager:
                             pages = section_info.pages
 
                             # 遍历页面
-                            for page_id, page_info in pages.items():
+                            for page_info in pages.values():
                                 # 如果页面类型为视频
                                 if page_info.page_content_type == 6:
-
                                     # 收集上报视频观看行为的协程对象列表
                                     coros_watch_video_behavior = []
                                     for element_info in page_info.elements:
@@ -625,7 +637,6 @@ class CoursewareManager:
 
                                     # 遍历所有元素
                                     for element_info in page_info.elements:
-
                                         # 跳过非视频元素
                                         if not isinstance(element_info, ElementVideo):
                                             continue
@@ -668,7 +679,7 @@ class CoursewareManager:
 
                             # 构建失败
                             if not study_record_info:
-                                logger.warning(f"构建请求信息失败, 跳过")
+                                logger.warning("构建请求信息失败, 跳过")
                                 break
 
                             logger.info(f"[节][{section_id}] 开始上报学习记录")
@@ -704,15 +715,15 @@ class CoursewareManager:
 
             if not self.user_config.courses:
                 logger.warning("当前用户未配置课程")
-                return None
+                return
 
             if not await self.__start_courseware_confirm():
-                return None
+                return
 
             user_info = await self.course_api.get_user_info()
             if not user_info:
                 logger.warning("获取用户信息失败")
-                return None
+                return
 
             # 创建引用
             courses = self.user_config.courses
@@ -731,29 +742,30 @@ class CoursewareManager:
                     textbook_name = textbook_info.textbook_name
                     chapters = textbook_info.chapters
 
-                    # 第一次处理
-                    logger.info(
-                        f"[教材][{textbook_id}] 开始第一次处理 '{textbook_name}'"
-                    )
-                    await courseware_handler(
-                        chapters=chapters, user_info=user_info, is_first=True
-                    )
+                    if self.config.anti_detection:
+                        # 反刷课检测: 第一段以 0 时长上报, 短路平台的刷课检测
+                        logger.info(
+                            f"[教材][{textbook_id}] 开始第一段处理 (0 时长) '{textbook_name}'"
+                        )
+                        await courseware_handler(
+                            chapters=chapters, user_info=user_info, is_first=True
+                        )
 
-                    # 刷新教材信息
-                    logger.info(
-                        f"[教材][{textbook_id}] 尝试刷新 '{textbook_name}', 可能耗时较长(<30s)"
-                    )
-                    refresh_status = await self.course_api.textbook_information(
-                        course_id=course_id, textbook_id=textbook_id
-                    )
-                    if refresh_status:
-                        logger.success(f"[教材][{textbook_id}] 刷新成功")
-                    else:
-                        logger.warning(f"[教材][{textbook_id}] 刷新失败")
+                        # 调用 information 接口触发刷课检测
+                        logger.info(
+                            f"[教材][{textbook_id}] 尝试触发并短路刷课检测 '{textbook_name}', 可能耗时较长(<120s)"
+                        )
+                        refresh_status = await self.course_api.textbook_information(
+                            course_id=course_id, textbook_id=textbook_id
+                        )
+                        if refresh_status:
+                            logger.success(f"[教材][{textbook_id}] 刷新成功")
+                        else:
+                            logger.warning(f"[教材][{textbook_id}] 刷新失败")
 
-                    # 第二次处理
+                    # 上报真实学习时长
                     logger.info(
-                        f"[教材][{textbook_id}] 开始第二次处理 '{textbook_name}'"
+                        f"[教材][{textbook_id}] 开始上报真实学习时长 '{textbook_name}'"
                     )
                     await courseware_handler(
                         chapters=chapters, user_info=user_info, is_first=False
@@ -768,7 +780,7 @@ class CoursewareManager:
 
         except Exception as e:
             logger.error(f"{format_exc()}\n[MANAGER][COURSEWARE] 刷课过程出现异常: {e}")
-            return None
+            return
 
     async def __print_courseware_info(self) -> None:
         """查看刷课信息"""
@@ -777,7 +789,7 @@ class CoursewareManager:
         try:
             if not self.user_config.courses:
                 logger.warning("当前用户已配置课程列表为空")
-                return None
+                return
 
             print("=" * 100)
             logger.info("当前用户配置的课程信息:")
@@ -803,7 +815,7 @@ class CoursewareManager:
                     chapters = textbook_info.chapters
 
                     # 遍历章节
-                    for chapter_id, chapter_info in chapters.items():
+                    for chapter_info in chapters.values():
                         logger.info("")
                         logger.info(f"   [章] '{chapter_info.chapter_name}'")
 
@@ -811,7 +823,7 @@ class CoursewareManager:
                         sections = chapter_info.sections
 
                         # 遍历节
-                        for section_id, section_info in sections.items():
+                        for section_info in sections.values():
                             logger.info("")
                             logger.info(f"     [节] '{section_info.section_name}'")
 
@@ -819,7 +831,7 @@ class CoursewareManager:
                             pages = section_info.pages
 
                             # 遍历页面
-                            for page_id, page_info in pages.items():
+                            for page_info in pages.values():
                                 # 创建引用
                                 page_content_type = page_info.page_content_type
                                 page_is_complete = page_info.is_complete
@@ -832,7 +844,6 @@ class CoursewareManager:
                                 complete_status = (
                                     "已刷完" if page_is_complete else "未完成"
                                 )
-                                page_type = ""
                                 page_text = f"       [{complete_status}][{page_type_map[page_content_type]}] '{page_info.page_name}'"
                                 if page_is_complete:
                                     logger.success(page_text)
@@ -849,13 +860,23 @@ class CoursewareManager:
             logger.info("当前上报时长配置:")
             for k, v in self.config.study_time.model_dump().items():
                 logger.info(
-                    f"[{k}] {config_type_choice_map[k]}, 当前值: {v["min"]}~{v["max"]} 秒"
+                    f"[{k}] {config_type_choice_map[k]}, 当前值: {v['min']}~{v['max']} 秒"
+                )
+            logger.info(
+                f"反刷课检测: {'开启' if self.config.anti_detection else '关闭'}"
+            )
+            if self.config.anti_detection:
+                logger.warning(
+                    "反刷课检测已开启: 每个教材先以 0 时长上报, 再上报真实学习时长"
+                )
+                logger.warning(
+                    "若第一段上报完成后中断刷课, 课件将处于 0 时长但已完成的状态, 容易被老师等人工排查发现"
                 )
             print("=" * 100)
 
         except Exception as e:
             logger.error(f"{format_exc()}\n[MANAGER][COURSEWARE] 查看刷课信息出错: {e}")
-            return None
+            return
 
     async def __remove_courseware(self) -> None:
         """删除课件"""
@@ -868,7 +889,7 @@ class CoursewareManager:
             # 课程为空
             if not courses:
                 logger.warning("当前用户未配置课程")
-                return None
+                return
 
             # 提示
             logger.warning(
@@ -895,7 +916,7 @@ class CoursewareManager:
             # 取消
             if not confirm:
                 logger.info("已取消删除课件")
-                return None
+                return
 
             # 创建课程选择
             course_choices = [
@@ -915,7 +936,7 @@ class CoursewareManager:
 
             if "取消" in raw_selected_course_ids:
                 logger.info("已取消删除课件")
-                return None
+                return
 
             # 解析课程ID列表
             selected_course_ids = [
@@ -952,7 +973,7 @@ class CoursewareManager:
 
                 if "取消" in raw_selected_textbook_ids:
                     logger.info("已取消删除课件")
-                    return None
+                    return
 
                 # 解析教材ID列表
                 selected_textbook_ids = [
@@ -1090,7 +1111,7 @@ class CoursewareManager:
 
         except Exception as e:
             logger.error(f"{format_exc()}\n[MANAGER][COURSEWARE] 删除课件: {e}")
-            return None
+            return
 
     async def __modify_study_time(self) -> None:
         """修改刷课上报时长"""
@@ -1108,7 +1129,7 @@ class CoursewareManager:
 
                 # 创建选择项
                 config_type_choices = [
-                    f"[{k}] {config_type_choice_map[k]}, 当前值: {v["min"]}~{v["max"]} 秒"
+                    f"[{k}] {config_type_choice_map[k]}, 当前值: {v['min']}~{v['max']} 秒"
                     for k, v in study_time_config.model_dump().items()
                 ] + ["返回"]
 
@@ -1123,7 +1144,7 @@ class CoursewareManager:
 
                 # 返回
                 if selected_type == "返回":
-                    return None
+                    return
 
                 # 解析用户选择
                 selected_type = selected_type.split("[")[1].split("]")[0].strip()
@@ -1133,9 +1154,11 @@ class CoursewareManager:
                     questionary.text(
                         message=f"请输入 '{config_type_choice_map[selected_type]}' 学习时长上报的最小时长 (秒)",
                         default="180",
-                        validate=lambda x: x.isdigit()
-                        and 0 <= int(x) <= 3600
-                        or "请输入正确的数字(0~3600)",
+                        validate=lambda x: (
+                            x.isdigit()
+                            and 0 <= int(x) <= 3600
+                            or "请输入正确的数字(0~3600)"
+                        ),
                     )
                 )
 
@@ -1144,9 +1167,11 @@ class CoursewareManager:
                     questionary.text(
                         message=f"请输入 '{config_type_choice_map[selected_type]}' 学习时长上报的最大时长 (秒)",
                         default="360",
-                        validate=lambda x: x.isdigit()
-                        and int(min_time) <= int(x) <= 3600
-                        or f"请输入正确的数字({min_time}~3600)",
+                        validate=lambda x, min_time=min_time: (
+                            x.isdigit()
+                            and int(min_time) <= int(x) <= 3600
+                            or f"请输入正确的数字({min_time}~3600)"
+                        ),
                     )
                 )
 
@@ -1155,7 +1180,7 @@ class CoursewareManager:
                 if not isinstance(
                     selected_study_minmax_time, ConfigModel.StudyTime.MinMaxTime
                 ):
-                    raise
+                    raise TypeError("学习时长配置对象类型错误")
 
                 # 保存学习时长上报
                 selected_study_minmax_time.min = int(min_time)
@@ -1170,7 +1195,58 @@ class CoursewareManager:
             logger.error(
                 f"{format_exc()}\n[MANAGER][COURSEWARE] 修改刷课上报时长出错: {e}"
             )
-            return None
+            return
+
+    async def __toggle_anti_detection(self) -> None:
+        """反刷课检测开关"""
+        logger.debug("[MANAGER][COURSEWARE] 反刷课检测开关")
+
+        try:
+            if self.config.anti_detection:
+                confirm = await questionary.confirm(
+                    message="反刷课检测当前已开启, 是否关闭?", default=False
+                ).ask_async()
+
+                if confirm:
+                    self.config.anti_detection = False
+                    self.config.save()
+                    logger.success("已关闭反刷课检测")
+
+                else:
+                    logger.info("已取消, 反刷课检测保持开启")
+
+            else:
+                logger.warning(
+                    "开启后, 每个教材将先以 0 时长上报学习记录, 用于尝试短路平台的刷课检测"
+                )
+                logger.warning(
+                    "随后调用 information 接口触发刷课检测 (超时 120 秒), 最后上报真实学习时长"
+                )
+                logger.warning(
+                    "风险: 第一段上报进行时若出现网络错误且重试耗尽, 已上报节的学习进度会丢失"
+                )
+                logger.warning(
+                    "风险: 若第一段上报完成后中断刷课, 课件将处于 0 时长但已完成的状态, 容易被老师等人工排查发现"
+                )
+                logger.warning("该功能基于对平台前端行为的观察, 不保证一直有效")
+
+                confirm = await questionary.confirm(
+                    message="是否开启反刷课检测?", default=False
+                ).ask_async()
+
+                if confirm:
+                    self.config.anti_detection = True
+                    self.config.save()
+                    logger.success("已开启反刷课检测")
+
+                else:
+                    logger.info("已取消, 反刷课检测保持关闭")
+
+        except Exception as e:
+            logger.error(
+                f"{format_exc()}\n[MANAGER][COURSEWARE] 反刷课检测开关出错: {e}"
+            )
+            return
 
     async def __prune_completed_courseware(self) -> None:
         """清理已刷完课程"""
@@ -1179,9 +1255,9 @@ class CoursewareManager:
         try:
             if not self.user_config.courses:
                 logger.warning("当前用户未配置课程")
-                return None
+                return
 
-            logger.info(f"正在重新获取学习记录")
+            logger.info("正在重新获取学习记录")
 
             # 遍历课程
             for course_id, course_info in self.user_config.courses.items():
@@ -1194,7 +1270,7 @@ class CoursewareManager:
                     chapters = textbook_info.chapters
 
                     # 遍历章
-                    for chapter_id, chapter_info in chapters.items():
+                    for chapter_info in chapters.values():
                         # 创建引用
                         chapter_name = chapter_info.chapter_name
                         sections = chapter_info.sections
@@ -1271,7 +1347,7 @@ class CoursewareManager:
             logger.error(
                 f"{format_exc()}\n[MANAGER][COURSEWARE] 清理已刷完课程出错: {e}"
             )
-            return None
+            return
 
     async def __decrypt_sync_study_record_request(self) -> None:
         """解密同步学习记录请求数据"""

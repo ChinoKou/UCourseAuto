@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+
 class ElementVideo(BaseModel):
     """视频元素 数据模型"""
 

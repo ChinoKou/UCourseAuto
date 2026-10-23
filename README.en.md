@@ -13,12 +13,13 @@ UCourseAuto is an automated CLI tool for completing courseware on the ULearning 
 - Document reading simulation
 - Content page completion
 - Customizable study time
+- Anti-detection mode (optional, off by default, see below)
 - Multiple users support
 - Modify courseware configuration
 
 ## Support Sites
 
-- ULearning Main Site https://www.ulearning.cn
+- ULearning Main Site https://www.ulearning.cn (the maintainer has no main-site data available for debugging, so main-site availability cannot be continuously verified — PRs are welcome)
 - Dongguan University of Technology https://lms.dgut.edu.cn
 
 ## Usage
@@ -37,6 +38,8 @@ cd UCourseAuto
 uv sync
 uv run main.py
 ```
+
+Alternative launch command: `uv run python -m src.main`
 
 <details>
 <summary>No uv yet? Click to see the install commands</summary>
@@ -69,6 +72,28 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## Configuration and Data Files
+
+The program generates local data under the `ucourse_data/` directory:
+
+- `ucourse_config.json`: the configuration file, stored as plain JSON. Note: the account password is stored in plain text in this file. Keep the `ucourse_data/` directory private and never share it with others.
+- `ucourse_logs/`: the runtime log directory.
+
+A legacy `ucourse_config.yaml` from previous versions (in the project root) is migrated automatically to the new configuration on first run (the migrated configuration carries a version number, and the old file is removed afterwards) — no manual action required.
+
+## Anti-Detection Mode (Optional, Off by Default)
+
+Select "反刷课检测" in the courseware management menu to enable it. Once enabled, reporting for each textbook is split into two passes:
+
+1. First pass: all pages are reported with a study time of 0. Based on observation, after a textbook is completed for the first time, querying it in the web frontend triggers the platform's information endpoint, which triggers courseware detection. At that moment the recorded study time is 0, which can short-circuit that detection (the client-side timeout of this endpoint is 120 seconds).
+2. Second pass: the real study time is reported. After the system marks the courseware complete, teachers may check the study time, so the real duration must be filled in.
+
+Notes:
+
+- This feature is based on observation of the platform's frontend behavior. The platform may change its strategy at any time, so it is not guaranteed to work.
+- If a network error occurs during the first pass and retries are exhausted, the study progress of the reported sections is lost.
+- If the run is interrupted after the first pass, the courseware stays in a 0-duration but completed state, which is easy for teachers to spot manually.
+
 ## How It Works
 
 ```mermaid
@@ -84,8 +109,16 @@ sequenceDiagram
     User->>Main: Select "Start Courseware"
     Main->>CM: Invoke __start_course_ware()
     activate CM
-    
+
     Note over CM: Load UserConfig<br/>Iterate: Course -> Textbook -> Chapter -> Section
+
+    opt Anti-detection enabled (per Textbook, off by default)
+        Note over CM: First pass: sync with studyTime = 0<br/>for every page
+        CM->>API: textbook_information(course_id, textbook_id)
+        API->>Server: GET /textbook/student/information (timeout 120s)
+        Note right of API: Triggers server-side courseware detection,<br/>short-circuited by the 0-duration records
+        API-->>CM: Refresh status
+    end
 
     loop Every "Section"
         CM->>API: initialize_section(section_id)

@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+
 class SyncStudyRecordAPIRequest(BaseModel):
     """
     同步学习记录API请求数据模型

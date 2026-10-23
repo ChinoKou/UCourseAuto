@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
-from .courseware import CoursewareChapter
+
+from src.schema.courseware import CoursewareChapter
+
 
 class ModelTextbook(BaseModel):
     """课程教材数据模型"""

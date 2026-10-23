@@ -3,10 +3,10 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
 
-from .config import UserConfig
+from src.schema.config import UserConfig
 
 if TYPE_CHECKING:
-    from apis import LoginAPI
+    from src.apis import LoginAPI
 
 
 class APIUrl(BaseModel):

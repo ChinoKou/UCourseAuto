@@ -5,11 +5,11 @@ from urllib.parse import unquote
 
 from loguru import logger
 
-from schema import APIUrl, LoginAPIUserInfoResponse, UserConfig
+from src.schema import APIUrl, LoginAPIUserInfoResponse, UserConfig
 
 if TYPE_CHECKING:
-    from config import Config
-    from logic import HttpClient
+    from src.logic import HttpClient
+    from src.logic.config import Config
 
 
 class LoginAPI:
@@ -29,7 +29,7 @@ class LoginAPI:
 
         self.user_config: UserConfig = config.users[username]
         self.config: Config = config
-        self.client: "HttpClient" = client
+        self.client: HttpClient = client
         self.api: APIUrl = APIUrl.create(self.user_config.site)
 
     async def login(self) -> LoginAPIUserInfoResponse | None:
@@ -68,7 +68,7 @@ class LoginAPI:
             # 转换为模型
             resp_model = LoginAPIUserInfoResponse.parse(user_info)
 
-            logger.debug(f"[API][✓] 执行登录并获取用户信息")
+            logger.debug("[API][✓] 执行登录并获取用户信息")
 
             return resp_model
 
@@ -94,12 +94,12 @@ class LoginAPI:
             if not resp or resp.status_code != 200:
                 status_code = resp.status_code if resp else None
                 logger.error(f"[API] 检查 Token 是否有效时网络出错: HTTP {status_code}")
-                raise
+                raise RuntimeError("检查 Token 是否有效失败")
 
             # 检查接口返回值
             parse_info = resp.text.strip().lower() == "true"
 
-            logger.debug(f"[API][✓] 检查Token是否有效")
+            logger.debug("[API][✓] 检查Token是否有效")
 
             return parse_info
 

@@ -4,9 +4,8 @@ from typing import TYPE_CHECKING
 import questionary
 from loguru import logger
 
-from utils import answer
-
-from .http_client import HttpClient
+from src.logic.http_client import HttpClient
+from src.utils import answer
 
 if TYPE_CHECKING:
     from httpx import Response
@@ -62,7 +61,7 @@ class VersionManager:
                 "https://edgeone.gh-proxy.org/",
             ]
 
-            resp: "Response | None" = None
+            resp: Response | None = None
 
             # 不使用代理
             if not use_proxy:
@@ -107,7 +106,7 @@ class VersionManager:
             release_tag: str | None = resp_body.get("tag_name")
             release_content: str | None = resp_body.get("body")
 
-            logger.debug(f"[MANAGER][VERSION][✓] 获取最新版本号")
+            logger.debug("[MANAGER][VERSION][✓] 获取最新版本号")
 
             return release_tag, release_content
 
@@ -178,5 +177,5 @@ class VersionManager:
                 logger.success("当前版本已是最新版本")
                 return True
 
-        except Exception as e:
+        except Exception:
             return False

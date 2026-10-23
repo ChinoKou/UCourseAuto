@@ -21,9 +21,9 @@ class BaseAPIResponse(BaseModel):
         try:
             return cls.model_validate(obj=resp_body, extra="allow")
 
-        except Exception as e:
+        except Exception:
             logger.debug(f"{format_exc()}\n[MODEL] 解析失败")
-            logger.warning(f"数据解析失败, 请提供日志并且提交issue反馈")
+            logger.warning("数据解析失败, 请提供日志并且提交issue反馈")
             return None
 
 

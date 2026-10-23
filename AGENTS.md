@@ -31,21 +31,22 @@
 
 UCourseAuto 是自动完成 优学院 平台课件的命令行工具，Python 3.12+（基线版本见 `.python-version`）。
 
-- `main.py` — 程序入口，主菜单与管理器装配
-- `config.py` — 配置读写（`Config` 继承 `schema.ConfigModel`；`ucourse_config.yaml` 默认加密保存）
-- `utils.py` — DES/Base64 加解密（`sync_text_encrypt`、`config_text_encrypt`/`config_text_decrypt`）等
-- `apis/` — 优学院 平台 API 封装（login、course）
-- `logic/` — 业务管理器：http_client、logger_manager、user_manager、version_manager、config_manager、data_manager、courseware_manager
-- `schema/` — Pydantic 数据模型（api_request、api_response、config、course、courseware、common）
+- `main.py` — 根目录启动器；入口逻辑在 `src/main.py`（`Main` 类，主菜单与管理器装配），也可用 `python -m src.main` 启动
+- `src/logic/config.py` — 配置读写与迁移（`Config` 继承 `schema.ConfigModel`；`ucourse_data/ucourse_config.json` 明文保存，密码为明文；`config_version` 版本号与 `MIGRATIONS` 迁移升级钩子负责旧版根目录 yaml 配置的自动迁移）
+- `src/utils/` — 工具包：interaction（用户交互辅助 answer）、crypto（sync 接口 DES/Base64 加解密 `sync_text_encrypt`/`sync_text_decrypt`）
+- `src/apis/` — 优学院 平台 API 封装（login、course）
+- `src/logic/` — 业务管理器：http_client、logger_manager、user_manager、version_manager、config_manager、data_manager、courseware_manager
+- `src/schema/` — Pydantic 数据模型（api_request、api_response、config、course、courseware、common）
 - `tests/` — pytest 回归测试
-- 不入库：`ucourse_logs/`、`ucourse_config.yaml`
+- 导入规范：所有 import 从项目根开始（`from src.xxx import yyy`），同级模块之间同样如此
+- 不入库：`ucourse_data/`
 
 ## 3. 分层与架构边界
 
 1. `schema/` 只放 Pydantic 模型，被所有层引用，自身不导入 apis/logic。
 2. `apis/` 只做 HTTP 调用与响应解析；`logic/` 编排业务流程并调用 `apis/`；`main.py` 装配入口。
 3. `schema/` 模型的字段顺序即配置的遍历顺序（课程→教材→章节→节→页面），刷课按插入顺序执行。
-4. 加密与上报协议只由 `utils.py` 提供。改动解析、上报逻辑前必须依据真实 API 响应结构；禁止臆造字段取值、枚举匹配与防御分支，禁止随意变更 `schema/` 的字段类型与默认值。
+4. 上报协议加密只由 `src/utils/crypto.py` 提供。改动解析、上报逻辑前必须依据真实 API 响应结构；禁止臆造字段取值、枚举匹配与防御分支，禁止随意变更 `schema/` 的字段类型与默认值。
 
 ## 4. 工具链（uv）
 

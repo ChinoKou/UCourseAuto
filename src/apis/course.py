@@ -3,8 +3,7 @@ from typing import TYPE_CHECKING
 
 from loguru import logger
 
-from config import Config
-from schema import (
+from src.schema import (
     APIUrl,
     ChapterInfoAPIResponse,
     CourseAPIUserInfoAPIResponse,
@@ -15,11 +14,11 @@ from schema import (
     TextbookInfoAPIResponse,
     TextbookListAPIResponse,
 )
-from utils import sync_text_encrypt
+from src.utils import sync_text_encrypt
 
 if TYPE_CHECKING:
-    from config import Config
-    from logic import HttpClient
+    from src.logic import HttpClient
+    from src.logic.config import Config
 
 
 class CourseAPI:
@@ -75,7 +74,7 @@ class CourseAPI:
             resp_body: dict = resp.json()
             resp_model = CourseListAPIResponse.parse(resp_body)
 
-            logger.debug(f"[API][✓] 获取课程列表")
+            logger.debug("[API][✓] 获取课程列表")
 
             return resp_model
 
@@ -460,7 +459,7 @@ class CourseAPI:
                 "lang": "zh",
             }
 
-            resp = await self.client.get(url=url, params=params, timeout=30)
+            resp = await self.client.get(url=url, params=params, timeout=120)
             if not resp or resp.status_code != 200:
                 status_code = resp.status_code if resp else None
                 logger.error(f"[API] 教材信息时网络出错: HTTP {status_code}")

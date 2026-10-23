@@ -6,14 +6,13 @@ from typing import TYPE_CHECKING
 import questionary
 from loguru import logger
 
-from apis import LoginAPI
-from schema import UserAPI, UserConfig
-from utils import answer
-
-from .http_client import HttpClient
+from src.apis import LoginAPI
+from src.logic.http_client import HttpClient
+from src.schema import UserAPI, UserConfig
+from src.utils import answer
 
 if TYPE_CHECKING:
-    from config import Config
+    from src.logic.config import Config
 
 
 class UserManager:
@@ -27,7 +26,7 @@ class UserManager:
         :type config: "Config"
         """
 
-        self.config: "Config" = config
+        self.config: Config = config
         self.active_client: HttpClient | None = None
         self.users: dict[str, UserAPI] = {}
         self.sites: dict[str, dict[str, str]] = {
@@ -70,17 +69,17 @@ class UserManager:
                 )
 
                 if choice == "返回":
-                    return None
+                    return
 
                 await choices_map[choice]()
 
-        except KeyboardInterrupt as e:
+        except KeyboardInterrupt:
             logger.info("[MANAGER][USER] 强制退出用户管理")
-            return None
+            return
 
         except Exception as e:
             logger.error(f"{format_exc()}\n[MANAGER][USER] 用户管理出现异常: {e}")
-            return None
+            return
 
     async def __login(self, user_config: UserConfig, retry: int = 0) -> bool:
         """
@@ -174,13 +173,10 @@ class UserManager:
                 )
 
                 # 覆盖确认
-                if username in self.config.users:
-                    if not await answer(
-                        questionary.confirm(
-                            message="用户已存在, 是否覆盖?", default=False
-                        )
-                    ):
-                        break
+                if username in self.config.users and not await answer(
+                    questionary.confirm(message="用户已存在, 是否覆盖?", default=False)
+                ):
+                    break
 
                 # 获取密码
                 password: str = await answer(
@@ -189,6 +185,7 @@ class UserManager:
                         validate=lambda x: len(x) > 0 or "密码不可为空",
                     )
                 )
+                logger.warning("密码将以明文形式保存在本地配置文件中, 请注意保管")
 
                 # 初始化用户配置信息实例
                 user_config = UserConfig(
@@ -385,14 +382,14 @@ class UserManager:
                         )
 
                     else:
-                        raise
+                        raise RuntimeError(f"不支持的属性: {attr_name}")
 
                     # 设置属性值
                     setattr(user, attr_name, attr_value)
 
                     # 去除 token 和 cookies
-                    setattr(user, "token", "abc")
-                    setattr(user, "cookies", {})
+                    user.token = "abc"
+                    user.cookies = {}
 
                     # 执行登录对修改进行校验
                     if await self.__login(user):
@@ -406,8 +403,8 @@ class UserManager:
 
                         # 有很多地方引用了 user 对象, 这里需使用 setattr 恢复原始值
                         setattr(user, attr_name, getattr(raw_user_config, attr_name))
-                        setattr(user, "token", getattr(raw_user_config, "token"))
-                        setattr(user, "cookies", getattr(raw_user_config, "cookies"))
+                        user.token = raw_user_config.token
+                        user.cookies = raw_user_config.cookies
                         self.config.save()
 
             return True
@@ -434,11 +431,10 @@ class UserManager:
         try:
             # 检查配置文件中的活跃用户是否存在于内存中的用户管理
             if self.config.active_user in self.users:
-
                 # 获取 LoginAPI 对象
                 login_api = self.users[self.config.active_user].login_api
                 if not login_api:
-                    raise
+                    raise RuntimeError("LoginAPI 对象不存在")
 
                 # 检查登录状态
                 login_status = await login_api.check_login_status()

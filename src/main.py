@@ -1,0 +1,141 @@
+import asyncio
+from collections.abc import Callable
+from sys import exit
+from traceback import format_exc
+from typing import TYPE_CHECKING
+
+import questionary
+from loguru import logger
+
+from src.logic import (
+    ConfigManager,
+    CoursewareManager,
+    LoggerManager,
+    UserManager,
+    VersionManager,
+)
+from src.logic.config import Config
+from src.utils import answer
+
+if TYPE_CHECKING:
+    from src.logic import HttpClient
+
+logger_manager: LoggerManager
+"""日志管理器全局实例, 由 main() 创建"""
+
+
+class Main:
+    def __init__(self) -> None:
+        self.config: Config = Config.load()
+        self.active_client: HttpClient | None = None
+        self.user_manager: UserManager = UserManager(self.config)
+        self.version_manager: VersionManager = VersionManager()
+        self.choices: list[str] = [
+            "进入课件管理",
+            "进入账户管理",
+            "进入配置管理",
+            "退出",
+        ]
+        self.choices_map: dict[str, Callable] = {
+            "进入课件管理": self.enter_courseware_manager,
+            "进入账户管理": self.enter_user_manager,
+            "进入配置管理": self.enter_config_manager,
+            "退出": lambda: None,
+        }
+        logger_manager.set_logger(debug=self.config.debug)
+
+    async def menu(self) -> None:
+        """主菜单"""
+        logger.debug("[MAIN] 进入主菜单")
+
+        if not await self.version_manager.check_version():
+            return None
+
+        while True:
+            retry = 0
+            while not await self.user_manager.check_login_status():
+                if retry >= 3:
+                    logger.error("多次获取登录态失败, 尝试修改活跃用户")
+                    self.config.active_user = ""
+                    self.config.save()
+                    return await self.menu()
+
+                retry += 1
+                await asyncio.sleep(1)
+
+            self.active_client = await self.user_manager.get_client()
+
+            logger.warning("请尽量通过 '退出' 选项关闭程序, 或多次按下 Ctrl+C 快速退出")
+            logger.info(f"当前用户: {self.config.active_user}")
+
+            choice = await answer(
+                questionary.select(
+                    message="[主菜单] 请选择",
+                    choices=self.choices,
+                    instruction="(使用方向键选择, 回车键确认)",
+                )
+            )
+            if choice == "退出":
+                exit(0)
+
+            await self.choices_map[choice]()
+
+    async def enter_courseware_manager(self) -> None:
+        """进入课件管理"""
+        if not self.active_client:
+            logger.error("未登录")
+            return
+
+        courseware_manager = CoursewareManager(
+            username=self.config.active_user,
+            config=self.config,
+            client=self.active_client,
+        )
+        await courseware_manager.menu()
+
+    async def enter_user_manager(self) -> None:
+        """进入账户管理"""
+        await self.user_manager.menu()
+
+    async def enter_config_manager(self) -> None:
+        """进入配置管理"""
+        if not self.active_client:
+            logger.error("未登录")
+            return
+
+        config_manager = ConfigManager(
+            config=self.config, client=self.active_client, logger_manager=logger_manager
+        )
+        await config_manager.menu()
+
+
+def main() -> None:
+    """程序入口"""
+    global logger_manager
+
+    try:
+        logger_manager = LoggerManager()
+        logger_manager.set_logger(debug=False)
+        logger.info("程序开源地址: https://github.com/ChinoKou/UCourseAuto")
+        app = Main()
+        asyncio.run(app.menu())
+
+    except KeyboardInterrupt:
+        logger.info("用户强制退出")
+
+    except Exception as e:
+        logger.error(f"{format_exc()}\n程序出现未知错误: {e}")
+
+    try:
+        logger.info("按回车键退出...")
+        input()
+
+    except (KeyboardInterrupt, EOFError):
+        pass
+
+    finally:
+        exit()
+
+
+if __name__ == "__main__":
+    main()

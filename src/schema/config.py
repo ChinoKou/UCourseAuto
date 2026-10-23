@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
-from .course import ModelCourse
+
+from src.schema.course import ModelCourse
+
 
 class UserConfig(BaseModel):
     """用户配置信息数据模型"""
@@ -9,7 +11,7 @@ class UserConfig(BaseModel):
     username: str = Field(title="用户名")
     """用户名"""
     password: str = Field(title="密码")
-    """密码"""
+    """密码 (明文保存在本地配置文件)"""
     token: str = "abc"  # 占位
     """鉴权令牌"""
     cookies: dict = Field(default_factory=dict)
@@ -19,8 +21,10 @@ class UserConfig(BaseModel):
 
 
 class ConfigModel(BaseModel):
-
     """配置信息数据模型"""
+
+    config_version: int = 1
+    """配置版本号, 供配置迁移使用"""
 
     class StudyTime(BaseModel):
         """学习时间数据模型"""
@@ -50,3 +54,5 @@ class ConfigModel(BaseModel):
     """学习时间配置"""
     sleep_time: float = 1
     """休眠时间(s)"""
+    anti_detection: bool = False
+    """反刷课检测开关, 开启后每个教材先以 0 时长上报再上报真实时长"""

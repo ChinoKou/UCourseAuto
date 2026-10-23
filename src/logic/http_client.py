@@ -165,7 +165,7 @@ class HttpClient:
         :rtype: bool
 
         """
-        logger.debug(f"[HTTP] 设置token")
+        logger.debug("[HTTP] 设置token")
 
         try:
             # 更新客户端请求头的Authorization属性
