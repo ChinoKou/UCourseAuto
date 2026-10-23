@@ -48,7 +48,7 @@ def legacy_config_path(tmp_path, monkeypatch):
 def test_migration_write_failure_keeps_legacy(
     tmp_path, monkeypatch, legacy_config_path
 ):
-    """回归: 迁移写盘失败时保留旧配置文件, 本次运行使用内存配置
+    """迁移写盘失败时保留旧配置文件, 本次运行使用内存配置
 
     源自迁移写入失败会被异常清理放大为旧配置静默丢失的缺陷,
     写盘失败不应让用户重新登录。
@@ -66,7 +66,7 @@ def test_migration_write_failure_keeps_legacy(
 def test_migration_failure_then_retry_succeeds(
     tmp_path, monkeypatch, legacy_config_path
 ):
-    """回归: 写盘失败后下次启动重试迁移, 成功落盘并移除旧文件"""
+    """写盘失败后下次启动重试迁移, 成功落盘并移除旧文件"""
     json_path = tmp_path / "ucourse_config.json"
     real_save = config_module.Config.save
     save_calls = {"count": 0}

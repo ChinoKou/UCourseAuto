@@ -148,6 +148,10 @@ class VersionManager:
 
                 return False
 
+            def parse_version(tag: str) -> tuple[int, ...]:
+                """解析 v 前缀标签为版本号数值元组"""
+                return tuple(int(part) for part in tag.removeprefix("v").split("."))
+
             logger.info(f"正在检查更新, 当前版本: {self.tag}")
 
             # 获取最新版本信息
@@ -160,8 +164,12 @@ class VersionManager:
             if not latest_release_tag or not latest_release_content:
                 return await check_fail()
 
+            # 解析版本号为数值元组, 字符串比较会得出错误的字典序结果
+            current_version = parse_version(self.tag)
+            latest_version = parse_version(latest_release_tag)
+
             # 有新版本
-            if self.tag < latest_release_tag:
+            if current_version < latest_version:
                 logger.warning(
                     f"检测到新版本 {latest_release_tag}, 当前版本: {self.tag}"
                 )
