@@ -221,3 +221,7 @@ __marimo__/
 
 # runtime artifacts
 ucourse_data/
+
+# development docs
+docs/plan/
+docs/research/
