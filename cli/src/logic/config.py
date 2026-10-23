@@ -156,7 +156,7 @@ class Config(ConfigModel):
             return False
 
     @classmethod
-    def load(cls, config_path: str = CONFIG_PATH) -> "Config":
+    def load(cls, config_path: str = CONFIG_PATH) -> Config:
         """从 JSON 文件加载配置信息, 旧版配置自动迁移升级"""
 
         try:
@@ -202,7 +202,7 @@ class Config(ConfigModel):
     @classmethod
     def _migrate_legacy_config(
         cls, config_dict: ConfigDict, config_path: str
-    ) -> "Config":
+    ) -> Config:
         """将旧版配置迁移升级为新版配置并保存"""
         logger.info("检测到旧版配置文件, 正在迁移至新版本...")
 
@@ -222,7 +222,7 @@ class Config(ConfigModel):
         return config
 
     @classmethod
-    def create_default_config(cls, config_path: str = CONFIG_PATH) -> "Config":
+    def create_default_config(cls, config_path: str = CONFIG_PATH) -> Config:
         """创建默认配置信息"""
 
         default_config = cls()

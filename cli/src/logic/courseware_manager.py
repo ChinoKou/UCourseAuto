@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 class CoursewareManager:
     """课件管理类"""
 
-    def __init__(self, username: str, config: "Config", client: "HttpClient") -> None:
+    def __init__(self, username: str, config: Config, client: HttpClient) -> None:
         """
         课件管理类初始化
 

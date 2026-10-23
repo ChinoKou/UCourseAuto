@@ -220,7 +220,7 @@ class HttpClient:
             logger.error(f"{format_exc()}\n[HTTP] 获取cookies出错: {e}")
             return {}
 
-    def copy_client(self) -> "HttpClient | None":
+    def copy_client(self) -> HttpClient | None:
         """
         复制Http客户端
 

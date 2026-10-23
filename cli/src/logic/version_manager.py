@@ -34,7 +34,7 @@ class VersionManager:
 
         try:
 
-            async def request(url) -> "Response | None":
+            async def request(url) -> Response | None:
                 """
                 获取版本信息
 

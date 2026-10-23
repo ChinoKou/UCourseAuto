@@ -130,7 +130,7 @@ def main() -> None:
         logger.info("按回车键退出...")
         input()
 
-    except (KeyboardInterrupt, EOFError):
+    except KeyboardInterrupt, EOFError:
         pass
 
     finally:

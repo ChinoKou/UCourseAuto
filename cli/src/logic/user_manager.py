@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 class UserManager:
     """用户管理类"""
 
-    def __init__(self, config: "Config") -> None:
+    def __init__(self, config: Config) -> None:
         """
         用户管理类初始化
 

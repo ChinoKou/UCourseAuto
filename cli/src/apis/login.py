@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class LoginAPI:
     """登录 API"""
 
-    def __init__(self, username: str, config: "Config", client: "HttpClient") -> None:
+    def __init__(self, username: str, config: Config, client: HttpClient) -> None:
         """
         登录 API初始化
 

@@ -17,7 +17,7 @@ class APIUrl(BaseModel):
     ua_api: str
 
     @classmethod
-    def create(cls, site: str) -> "APIUrl":
+    def create(cls, site: str) -> APIUrl:
         """创建实例"""
         url_map = {
             "ulearning": {
@@ -39,4 +39,4 @@ class UserAPI:
     """用户API"""
 
     user_config: UserConfig
-    login_api: "LoginAPI"
+    login_api: LoginAPI

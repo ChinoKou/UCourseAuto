@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 class CourseAPI:
     """课程 API"""
 
-    def __init__(self, username: str, config: "Config", client: "HttpClient") -> None:
+    def __init__(self, username: str, config: Config, client: HttpClient) -> None:
         """
         课程 API
 

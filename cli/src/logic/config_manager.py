@@ -16,7 +16,7 @@ class ConfigManager:
     """配置管理类"""
 
     def __init__(
-        self, config: "Config", client: HttpClient, logger_manager: LoggerManager
+        self, config: Config, client: HttpClient, logger_manager: LoggerManager
     ) -> None:
         """
         配置管理类初始化
