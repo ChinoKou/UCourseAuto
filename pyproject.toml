@@ -37,6 +37,9 @@ possibly-unresolved-reference = "error"
 [tool.ruff.lint]
 ignore = ["BLE001"]
 
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
 [tool.ty.src]
-include = ["main.py", "src"]
+include = ["main.py", "src", "tests"]
 exclude = ["build"]

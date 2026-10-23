@@ -275,7 +275,7 @@ class CoursewareManager:
             # 解析异步调度信息
             parsed_textbook_infos: dict[int, TextbookInfoAPIResponse] = {}
             for result in results_get_textbook_info:
-                # 跳过获取失败的教材信息
+                # 获取失败的教材信息跳过解析, 缺少该教材信息会使课件配置中止
                 if not result:
                     continue
 
@@ -325,7 +325,7 @@ class CoursewareManager:
                 # 解析异步调度信息
                 parsed_chapter_infos: dict[int, ChapterInfoAPIResponse] = {}
                 for result in results_get_chapter_info:
-                    # 跳过获取失败的章节信息
+                    # 获取失败的章节信息跳过解析, 缺少该章节信息会使课件配置中止
                     if not result:
                         continue
 
@@ -441,7 +441,7 @@ class CoursewareManager:
                                         int, QuestionAnswerAPIResponse
                                     ] = {}
                                     for result in results_get_question_answer_list:
-                                        # 跳过获取失败的答案列表
+                                        # 获取失败的答案列表跳过解析, 缺少该答案会使课件配置中止
                                         if not result:
                                             continue
 

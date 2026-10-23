@@ -210,10 +210,11 @@ class Config(ConfigModel):
         config_dict = _apply_migrations(config_dict)
         config = cls.model_validate(config_dict)
 
-        # 保存新配置, 写入失败时保留旧文件以便重试
+        # 保存新配置, 写入失败时保留旧文件以便下次启动重试迁移, 本次运行使用内存配置
         config.save(config_path)
         if not os.path.exists(config_path):
-            raise RuntimeError("迁移后配置文件写入失败")
+            logger.error("迁移后配置文件写入失败, 已保留旧配置文件, 下次启动将重试迁移")
+            return config
 
         # 迁移完成后移除旧配置文件
         os.remove(LEGACY_CONFIG_NAME)
