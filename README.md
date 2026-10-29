@@ -4,7 +4,7 @@
 
 ## UCourseAuto 是什么？
 
-UCourseAuto 通过仓库内实现的协议客户端自动完成 优学院 平台的课件任务，提供网页版与命令行版本两种运行形态。
+UCourseAuto 通过仓库内实现的协议客户端自动完成 优学院 平台的课件任务，提供网页与命令行版本两种运行形态。
 
 - **网页版（在线运行）**：纯静态前端应用，部署于 Cloudflare Pages。所有网络请求由浏览器直接发送至 优学院 平台，无任何服务端参与，无需配置开发环境即可使用。
 - **命令行版本（本地运行）**：基于 Python 编写的终端交互工具，提供独立二进制可执行文件，亦支持源码运行。
@@ -34,9 +34,9 @@ UCourseAuto 通过仓库内实现的协议客户端自动完成 优学院 平台
 
 ## 使用方法
 
-### 网页版
+### 一、网页版
 
-#### 在线使用
+#### 1、在线使用
 
 - https://ucourseauto.chinokou.me 
 - https://uca.chinokou.me 
@@ -44,7 +44,10 @@ UCourseAuto 通过仓库内实现的协议客户端自动完成 优学院 平台
 
 使用现代浏览器访问以上任意站点即可直接进入工作台。
 
-#### 本地开发与构建
+#### 2、本地开发与构建
+
+<details>
+<summary>本地开发与构建</summary>
 
 如需在本地运行网页版前端，推荐使用 [Bun](https://bun.sh/)：
 
@@ -64,13 +67,18 @@ bun run build
 
 构建生成的静态文件位于 `webapp/dist/` 目录。
 
-### 命令行版本
+</details>
 
-#### 二进制运行
+### 二、命令行版本
+
+#### 1、二进制运行
 
 前往 [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) 页面下载最新的可执行文件，无需配置 Python 环境，下载后直接运行。
 
-#### 源码运行
+#### 2、源码运行
+
+<details>
+<summary>源码运行</summary>
 
 推荐使用 [uv](https://docs.astral.sh/uv/) 管理 Python 环境与依赖：
 
@@ -116,6 +124,8 @@ pip install -r requirements.txt
 # 运行程序
 python main.py
 ```
+
+</details>
 
 ## 配置与数据存储
 
