@@ -5,7 +5,6 @@
   z-index: 90;
   background: rgba(10, 9, 13, 0.56);
   backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
   opacity: 1;
   transition: opacity 0.24s ease;
 }

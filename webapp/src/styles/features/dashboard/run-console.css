@@ -32,7 +32,6 @@
   color: var(--console-ink);
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
 .uc-run-console__aurora {
@@ -232,7 +231,6 @@
   border-radius: var(--radius-lg);
   background: var(--surface-soft);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .uc-console-readiness__head {

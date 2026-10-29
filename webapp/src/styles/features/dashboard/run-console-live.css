@@ -22,7 +22,6 @@
   border-radius: var(--radius-md);
   background: var(--surface-soft);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   flex: none;
 }
 

@@ -10,7 +10,6 @@
   background: var(--surface);
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(16px) saturate(1.18);
-  -webkit-backdrop-filter: blur(16px) saturate(1.18);
 }
 
 .uc-card__top {

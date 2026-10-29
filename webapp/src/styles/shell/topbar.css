@@ -12,7 +12,6 @@
   border-bottom: 1px solid var(--line);
   background: color-mix(in srgb, var(--bg) 76%, transparent);
   backdrop-filter: blur(20px) saturate(1.25);
-  -webkit-backdrop-filter: blur(20px) saturate(1.25);
 }
 
 .uc-topbar__inner {
