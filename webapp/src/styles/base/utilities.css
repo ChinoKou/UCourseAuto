@@ -1,0 +1,86 @@
+/* 通用工具类: 数字字体、纵排容器、眉题、文字链接与小节标题 */
+.uc-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.uc-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.uc-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  line-height: 1.2;
+  color: var(--ink-3);
+}
+
+.uc-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: color 0.18s ease;
+}
+
+.uc-text-link:hover {
+  color: var(--accent);
+}
+
+.uc-text-link.is-active {
+  color: var(--accent);
+}
+
+.uc-text-link:disabled {
+  opacity: 0.4;
+}
+
+.uc-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.uc-section-head h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+.uc-section-head > span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+/* 全站共用的循环动效: 呼吸与旋转 */
+@keyframes uc-breathe {
+  0%,
+  100% {
+    transform: scale(0.94);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes uc-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

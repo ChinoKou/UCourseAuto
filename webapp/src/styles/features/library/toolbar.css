@@ -1,0 +1,178 @@
+/* 课件库工具栏: 批量多选浮动条、树节点复选框与行内删除动作 */
+
+.uc-selection-bar {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 10px 6px 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line-strong));
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--surface-solid) 94%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 12px 28px -6px rgba(0, 0, 0, 0.22),
+    0 4px 10px -2px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.uc-selection-bar__lead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uc-selection-bar__check {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: var(--shadow-sm);
+  flex: none;
+}
+
+.uc-selection-bar strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.uc-selection-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.uc-selection-bar__btn-short {
+  display: none;
+}
+
+/* 树复选框与半选指示 */
+.uc-tree-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+  flex: none;
+}
+
+.uc-checkbox:indeterminate {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.uc-checkbox:indeterminate::after {
+  width: 9px;
+  height: 0;
+  border-left: 0;
+  border-bottom: 2px solid var(--accent);
+  transform: none;
+}
+
+/* 树行尾删除按钮 */
+.uc-tree-delete {
+  flex: none;
+  margin-right: 2px;
+  opacity: 0.32;
+  color: var(--ink-3);
+  transition:
+    opacity 0.16s ease,
+    color 0.16s ease,
+    background 0.16s ease;
+}
+
+.uc-tree__row:hover .uc-tree-delete,
+.uc-tree-delete:focus-visible {
+  opacity: 0.9;
+}
+
+.uc-tree-delete:hover:not(:disabled) {
+  opacity: 1;
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+@media (max-width: 600px) {
+  .uc-selection-bar {
+    bottom: 12px;
+    gap: 6px;
+    padding: 5px 6px 5px 10px;
+    max-width: calc(100% - 16px);
+    width: max-content;
+    box-sizing: border-box;
+    font-size: 11px;
+  }
+
+  .uc-selection-bar__lead {
+    gap: 5px;
+  }
+
+  .uc-selection-bar__actions {
+    gap: 4px;
+  }
+
+  .uc-selection-bar__actions .uc-btn--sm {
+    height: 30px;
+    padding: 0 8px;
+    font-size: 11.5px;
+    gap: 4px;
+  }
+
+  .uc-selection-bar__btn-full {
+    display: none;
+  }
+
+  .uc-selection-bar__btn-short {
+    display: inline;
+  }
+
+  .uc-tree-check {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+  }
+
+  .uc-tree-delete {
+    opacity: 0.75;
+    width: 22px;
+    height: 22px;
+    margin-right: 2px;
+    flex: none;
+  }
+
+  .uc-tree-delete svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .uc-selection-bar {
+    padding: 4px 5px 4px 8px;
+    gap: 4px;
+    font-size: 10.5px;
+  }
+
+  .uc-selection-bar__lead-unit {
+    display: none;
+  }
+
+  .uc-selection-bar__check {
+    width: 18px;
+    height: 18px;
+  }
+
+  .uc-selection-bar__actions .uc-btn--sm {
+    height: 28px;
+    padding: 0 6px;
+    font-size: 11px;
+  }
+}

@@ -1,0 +1,187 @@
+/* 账号抽屉: 当前账号、账号列表与操作 */
+.uc-account-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.uc-account-current {
+  position: relative;
+  overflow: hidden;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(
+      340px 200px at 100% 0%,
+      color-mix(in srgb, var(--accent) 20%, transparent),
+      transparent 70%
+    ),
+    var(--surface-muted);
+}
+
+.uc-account-current__glow {
+  position: absolute;
+  top: -90px;
+  right: -70px;
+  width: 220px;
+  height: 220px;
+  border: 1px solid color-mix(in srgb, var(--accent) 14%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.uc-account-current__top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.uc-account-current__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.uc-account-current__identity strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 720;
+}
+
+.uc-account-current__identity .uc-mono {
+  font-size: 10px;
+  color: var(--ink-3);
+}
+
+.uc-account-current__site {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.uc-account-current__site .uc-mono {
+  margin-left: auto;
+  font-size: 9px;
+  color: var(--ink-3);
+}
+
+.uc-account-current__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.uc-account-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.uc-account-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.25s ease;
+}
+
+.uc-account-row:hover {
+  background: var(--surface-muted);
+}
+
+.uc-account-row.is-active {
+  position: relative;
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 42%, var(--surface-muted));
+  animation: uc-account-wave 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes uc-account-wave {
+  from {
+    border-color: var(--accent);
+    box-shadow:
+      0 0 0 2px var(--accent-soft-2),
+      0 2px 8px -2px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  to {
+    border-color: var(--accent-2);
+    box-shadow:
+      0 0 0 5px var(--accent-soft),
+      0 4px 18px -2px color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uc-account-row.is-active {
+    animation: none;
+    box-shadow: 0 0 0 2px var(--accent-soft);
+  }
+}
+
+.uc-account-row__main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  padding: 8px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.uc-account-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.uc-account-row__name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.uc-account-row__meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 9.5px;
+  color: var(--ink-3);
+}
+
+
+.uc-account-row__arrow {
+  flex: none;
+  color: var(--ink-3);
+}
+
+.uc-account-drawer__tools {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+

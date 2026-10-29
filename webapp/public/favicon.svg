@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+  <defs>
+    <linearGradient id="uc-brand-gradient" x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8d7bff"/>
+      <stop offset="0.55" stop-color="#5b52e8"/>
+      <stop offset="1" stop-color="#3f37c9"/>
+    </linearGradient>
+  </defs>
+  <rect width="40" height="40" rx="12" fill="url(#uc-brand-gradient)"/>
+  <path d="M12.5 12V20.5C12.5 25.2 16.2 29 20.8 29C25.4 29 29.1 25.2 29.1 20.5V12" stroke="white" stroke-width="3.3" stroke-linecap="round"/>
+  <circle cx="29.1" cy="9.4" r="2.4" fill="#ffd9a3"/>
+</svg>

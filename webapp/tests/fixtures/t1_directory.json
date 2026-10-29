@@ -1,0 +1,82 @@
+{
+  "courseid": 50101,
+  "coursename": "高等数学(上)",
+  "chapters": [
+    {
+      "nodeid": 101,
+      "nodetitle": "第一章 函数与极限",
+      "orderindex": 1,
+      "hide": 0,
+      "preview": 0,
+      "id": 0,
+      "items": [
+        {
+          "itemid": 1011,
+          "title": "第一节 函数",
+          "orderindex": 1,
+          "hide": 0,
+          "ishidepreview": "2",
+          "id": 0,
+          "coursepages": [
+            { "id": 501, "relationid": 601, "title": "函数的概念", "orderindex": 1, "contentType": 5 },
+            { "id": 502, "relationid": 602, "title": "函数的图像", "orderindex": 2, "contentType": 6 },
+            { "id": 506, "relationid": 606, "title": "第一章测验", "orderindex": 3, "contentType": 7 }
+          ]
+        },
+        {
+          "itemid": 1012,
+          "title": "第二节 隐藏的习题课",
+          "orderindex": 2,
+          "hide": 1,
+          "ishidepreview": "2",
+          "id": 0,
+          "coursepages": [
+            { "id": 503, "relationid": 603, "title": "隐藏节内的页面", "orderindex": 1, "contentType": 5 }
+          ]
+        }
+      ]
+    },
+    {
+      "nodeid": 102,
+      "nodetitle": "第二章 导数与微分",
+      "orderindex": 2,
+      "hide": 0,
+      "preview": 0,
+      "id": 0,
+      "items": [
+        {
+          "itemid": 1021,
+          "title": "第一节 导数定义",
+          "orderindex": 1,
+          "hide": 0,
+          "ishidepreview": "2",
+          "id": 0,
+          "coursepages": [
+            { "id": 504, "relationid": 604, "title": "极限运算", "orderindex": 1, "contentType": 7 }
+          ]
+        }
+      ]
+    },
+    {
+      "nodeid": 103,
+      "nodetitle": "附录(隐藏章)",
+      "orderindex": 3,
+      "hide": 1,
+      "preview": 1,
+      "id": 0,
+      "items": [
+        {
+          "itemid": 1031,
+          "title": "附录A 常用公式",
+          "orderindex": 1,
+          "hide": 0,
+          "ishidepreview": "2",
+          "id": 0,
+          "coursepages": [
+            { "id": 505, "relationid": 605, "title": "隐藏章内的页面", "orderindex": 1, "contentType": 6 }
+          ]
+        }
+      ]
+    }
+  ]
+}

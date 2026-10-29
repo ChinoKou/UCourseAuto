@@ -1,0 +1,146 @@
+{
+  "chapterid": 101,
+  "wholepageItemDTOList": [
+    {
+      "itemid": 1011,
+      "wholepageDTOList": [
+        {
+          "id": 501,
+          "relationid": 601,
+          "content": "函数的概念",
+          "contentType": 5,
+          "contentnodeid": 1011,
+          "type": 5,
+          "coursepageDTOList": [
+            {
+              "coursepageDTOid": 7001,
+              "parentid": 501,
+              "resourceid": 0,
+              "type": 10,
+              "content": "函数的概念(文档)"
+            },
+            {
+              "coursepageDTOid": 7002,
+              "parentid": 501,
+              "resourceid": 0,
+              "type": 12,
+              "content": "函数的表示方法"
+            },
+            {
+              "coursepageDTOid": 7003,
+              "parentid": 501,
+              "resourceid": 8001,
+              "type": 4,
+              "videoLength": 90
+            }
+          ]
+        },
+        {
+          "id": 502,
+          "relationid": 602,
+          "content": "函数的图像",
+          "contentType": 6,
+          "contentnodeid": 1011,
+          "type": 6,
+          "coursepageDTOList": [
+            {
+              "coursepageDTOid": 7004,
+              "parentid": 502,
+              "resourceid": 8002,
+              "type": 4,
+              "videoLength": 300
+            },
+            {
+              "coursepageDTOid": 7005,
+              "parentid": 502,
+              "resourceid": 8003,
+              "type": 4,
+              "videoLength": 450
+            },
+            {
+              "coursepageDTOid": 7006,
+              "parentid": 502,
+              "resourceid": 0,
+              "type": 12,
+              "content": "请观看教学视频"
+            }
+          ]
+        },
+        {
+          "id": 506,
+          "relationid": 606,
+          "content": "第一章测验",
+          "contentType": 7,
+          "contentnodeid": 1011,
+          "type": 7,
+          "coursepageDTOList": [
+            {
+              "coursepageDTOid": 7007,
+              "parentid": 506,
+              "resourceid": 0,
+              "type": 6,
+              "content": "第一章测验",
+              "answertime": null,
+              "questionDTOList": [
+                { "questionid": 9001, "score": 2.5, "title": "下列函数中为奇函数的是", "type": 1 },
+                { "questionid": 9002, "score": 3, "title": "多选题: 以下说法正确的有", "type": 2 },
+                { "questionid": 9003, "score": 0.9, "title": "判断题: 函数必有图像", "type": 4 }
+              ]
+            },
+            {
+              "coursepageDTOid": 7008,
+              "parentid": 506,
+              "resourceid": 0,
+              "type": 12,
+              "content": "测验说明文字"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "itemid": 1012,
+      "wholepageDTOList": [
+        {
+          "id": 503,
+          "relationid": 603,
+          "content": "隐藏节内的页面",
+          "contentType": 5,
+          "contentnodeid": 1012,
+          "type": 5,
+          "coursepageDTOList": [
+            {
+              "coursepageDTOid": 7009,
+              "parentid": 503,
+              "resourceid": 0,
+              "type": 10,
+              "content": "隐藏节文档"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "itemid": 9999,
+      "wholepageDTOList": [
+        {
+          "id": 507,
+          "relationid": 607,
+          "content": "未建树节内的页面",
+          "contentType": 6,
+          "contentnodeid": 9999,
+          "type": 6,
+          "coursepageDTOList": [
+            {
+              "coursepageDTOid": 7010,
+              "parentid": 507,
+              "resourceid": 8004,
+              "type": 4,
+              "videoLength": 600
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

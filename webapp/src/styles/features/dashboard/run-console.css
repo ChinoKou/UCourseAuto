@@ -1,0 +1,569 @@
+/* 首页刷课卡: 外框、卡头、启动区、空状态与完成状态 */
+.uc-run-console {
+  --console-ink: var(--ink);
+  --console-muted: var(--ink-3);
+  --console-line: var(--line);
+  --console-soft: var(--surface-muted);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  padding: 24px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--line));
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(
+      620px 460px at 85% -10%,
+      color-mix(in srgb, var(--accent) 13%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      480px 360px at -10% 110%,
+      color-mix(in srgb, var(--warm) 8%, transparent),
+      transparent 70%
+    ),
+    var(--surface);
+  color: var(--console-ink);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.uc-run-console__aurora {
+  position: absolute;
+  top: -190px;
+  right: -130px;
+  width: 480px;
+  height: 480px;
+  border: 1px solid color-mix(in srgb, var(--accent) 14%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: uc-breathe 6.5s ease-in-out infinite;
+}
+
+.uc-run-console__aurora::before,
+.uc-run-console__aurora::after {
+  content: "";
+  position: absolute;
+  border: 1px solid color-mix(in srgb, var(--accent) 9%, transparent);
+  border-radius: 50%;
+}
+
+.uc-run-console__aurora::before {
+  inset: 65px;
+}
+
+.uc-run-console__aurora::after {
+  inset: 140px;
+}
+
+.uc-run-console__head {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--console-line);
+}
+
+.uc-run-console__head-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.uc-run-console__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 2px 4px 2px 2px;
+}
+
+.uc-run-console__body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.uc-run-console__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.uc-run-console__body::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--console-line) 80%, transparent);
+  border-radius: var(--radius-pill);
+}
+
+/* 待命与就绪启动容器 */
+.uc-run-console__idle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: none;
+}
+
+.uc-console-hub {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.76fr) minmax(0, 1.24fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* 启动核心按键 */
+.uc-console-launch {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 220px;
+  padding: 16px 12px;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-soft);
+  text-align: center;
+  overflow: hidden;
+}
+
+.uc-console-launch__ring {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: uc-breathe 4.5s ease-in-out infinite;
+}
+
+.uc-console-launch__ring--inner {
+  width: 140px;
+  height: 140px;
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--accent-2) 30%, transparent);
+  animation: uc-rotate 28s linear infinite;
+}
+
+.uc-console-launch__button {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  padding-left: 5px;
+  border: 0;
+  border-radius: 50%;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 60%),
+    linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: #ffffff;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.25) inset,
+    0 18px 42px -12px color-mix(in srgb, var(--accent) 85%, transparent);
+  cursor: pointer;
+  transition:
+    transform 0.24s var(--ease-spring),
+    box-shadow 0.24s ease;
+}
+
+.uc-console-launch__button:hover:not(:disabled) {
+  transform: scale(1.06);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.35) inset,
+    0 24px 50px -10px color-mix(in srgb, var(--accent) 95%, transparent);
+}
+
+.uc-console-launch__button:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.uc-console-launch__button:disabled {
+  cursor: wait;
+  opacity: 0.85;
+}
+
+.uc-console-launch__title {
+  position: relative;
+  z-index: 1;
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 730;
+  letter-spacing: -0.03em;
+  color: var(--console-ink);
+}
+
+.uc-spinner--lg {
+  width: 26px;
+  height: 26px;
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: uc-rotate 0.8s linear infinite;
+}
+
+/* 课件就绪看板 */
+.uc-console-readiness {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-soft);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.uc-console-readiness__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.uc-console-readiness__title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.uc-console-readiness__title {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--console-ink);
+}
+
+.uc-console-readiness__percent-wrap {
+  display: flex;
+  align-items: baseline;
+}
+
+.uc-console-readiness__percent {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+}
+
+.uc-console-readiness__percent small {
+  margin-left: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--console-muted);
+}
+
+.uc-console-readiness__bar {
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--console-soft);
+}
+
+.uc-console-readiness__bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-2), var(--warm));
+  transition: width 0.6s var(--ease-out);
+}
+
+.uc-console-readiness__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.uc-console-readiness__metric {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-strong);
+}
+
+.uc-console-readiness__metric.is-highlight {
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--console-line));
+  background: color-mix(in srgb, var(--accent-soft) 40%, var(--surface-strong));
+}
+
+.uc-console-readiness__metric strong {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--console-ink);
+}
+
+.uc-console-readiness__metric.is-highlight strong {
+  color: var(--accent);
+}
+
+.uc-console-readiness__metric span {
+  font-size: 10.5px;
+  color: var(--console-muted);
+}
+
+.uc-console-readiness__error {
+  margin: 0;
+  font-size: 12px;
+}
+
+.uc-console-readiness__selection-hint {
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: var(--console-muted);
+}
+
+.uc-console-readiness__selection-hint b {
+  font-family: var(--font-mono);
+  color: var(--console-ink);
+}
+
+.uc-console-readiness__selection-hint .is-warning {
+  color: var(--warning);
+}
+
+/* 课件为空的引导视图 */
+.uc-console-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 20px 10px;
+}
+
+.uc-console-empty__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 520px;
+  padding: 28px 24px;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-soft);
+  text-align: center;
+}
+
+.uc-console-empty__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 14px;
+}
+
+.uc-console-empty__halo {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 50%;
+  animation: uc-rotate 24s linear infinite;
+}
+
+.uc-console-empty__core {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.uc-console-empty__card h3 {
+  font-size: 18px;
+  font-weight: 710;
+  letter-spacing: -0.03em;
+  color: var(--console-ink);
+}
+
+.uc-console-empty__card p {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--console-muted);
+}
+
+
+.uc-console-empty__actions {
+  margin-top: 22px;
+}
+
+/* 运行完成与错误状态卡片 */
+.uc-console-finish {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 6px;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.uc-console-finish__icon-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  margin-bottom: 12px;
+}
+
+.uc-console-finish__ring {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed color-mix(in srgb, var(--success) 35%, transparent);
+  border-radius: 50%;
+  animation: uc-rotate 20s linear infinite;
+}
+
+.uc-console-finish--error .uc-console-finish__ring {
+  border-color: color-mix(in srgb, var(--danger) 35%, transparent);
+}
+
+.uc-console-finish--warning .uc-console-finish__ring {
+  border-color: color-mix(in srgb, var(--warning) 35%, transparent);
+}
+
+.uc-console-finish__icon {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+  border-radius: 50%;
+  background: var(--success-soft);
+  color: var(--success);
+  box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--success) 40%, transparent);
+}
+
+.uc-console-finish--error .uc-console-finish__icon {
+  border-color: color-mix(in srgb, var(--danger) 30%, transparent);
+  background: var(--danger-soft);
+  color: var(--danger);
+  box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--danger) 40%, transparent);
+}
+
+.uc-console-finish--warning .uc-console-finish__icon {
+  border-color: color-mix(in srgb, var(--warning) 30%, transparent);
+  background: var(--warning-soft);
+  color: var(--warning);
+  box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--warning) 40%, transparent);
+}
+
+.uc-console-finish__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--console-muted);
+}
+
+.uc-console-finish h2 {
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 720;
+  letter-spacing: -0.03em;
+  color: var(--console-ink);
+}
+
+.uc-console-finish p {
+  max-width: 480px;
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--console-muted);
+}
+
+.uc-console-finish__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 460px;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+}
+
+.uc-console-finish__stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.uc-console-finish__stat-item strong {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--console-ink);
+}
+
+.uc-console-finish__stat-item span {
+  font-size: 10.5px;
+  color: var(--console-muted);
+}
+
+.uc-console-finish__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+@media (max-width: 1000px) {
+  .uc-console-hub {
+    grid-template-columns: 1fr;
+  }
+
+  .uc-console-readiness {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .uc-run-console {
+    padding: 16px;
+  }
+
+  .uc-console-readiness__metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .uc-run-console {
+    padding: 12px 8px;
+    border-radius: var(--radius-md);
+  }
+}

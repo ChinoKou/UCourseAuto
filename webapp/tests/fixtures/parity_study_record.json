@@ -1,0 +1,81 @@
+{
+  "cipher": "+rydL4Ll3U8MpcTtzfoZT4CP9HNzefg2mY0FvtAXOwwcOFpNvXCaXEjE04luZoeljgcBLiJDq/+mlXdC+TDiiOQ+fqhdsicFjGIrjXpF3RT9tX4kIZ/bxolzHbCMKFde2VsD147IKY1o0qihLet0K+90QiE8pcg4vUKHO0BTVQ1e6KRkTBvMu9W4/25UBEYydjk4ips90UawY0iV4ktwmlbV4ShYGMvAWIR+723+Zp6U/Zwh7mqXJ07bwV+JnM09TjsY+sD5w/pzE7fIrehlEul4ZqTwbrZtISDiTvcq+/Nf5oWb2ivFm3ao0RN6PuteUvNVFV8UB6e7rEUL9vQDwYCCoejCys/5NyRvwGYhamxGdxgDSb9fnXk7QKpxvxs7mg96RQg5r6lTfbBiJe3iXOkKWZBofwpPU8S6T34JbwAyhqkXDN/bsoXfryCQ/8olqJk+LAekszbcZCbx4mgxkfQjYT/UKf4PeXTNWkBbSAzONoVMmyHNBClexwm9bU0KggyNSsA3gukfu7ihoAgQ3S6roEMKNBUqkE5YLupvRWNoZWeSAVdNDRAIf6wXolnC0KFpvfTKeRpYuvL/LkwMSxBA0zl5xXiuYvhC+WcBCeojXy20IG21IiGC92elUZSvh3/iQ/YudRU0Rv6bbScsQgRXwgucajyv8FbNhvmSXDkxvrV5YnhIL7fw4nA/jIc3x/oMFXFRmBQvNEnodoo+RTTYJt6Zq2b3jGIrjXpF3RRT8suFadxOzR2i2Z2fUiahzP3buwuehgOARZOBQfZBs0i8IM9BeSgWao9tCHXVTIx6W8rItY7HitZvpO0T+DkXDGMRERN/vZqbV4aQ9h+B4ul4ZqTwbrZtISDiTvcq+/Nf5oWb2ivFm3ao0RN6PuteUvNVFV8UB6dm3/5/9eUD8jbwNMWcAEeOenfmZz/8Xxd010JCzwCwLoYclItygtLcT51dvPkjRRzhmkYkAi2cLKMleKiDEWDcYIUWGV3UxcwntAaCoW0mqI1MhF9R9w6Mf4yv5LSDe/3j4MlTiMjIbZdpoeRSba+AyWaml9lKxT5urzqo41JAaBPt4MtK5lhLAfWzYqNZoPgLZyqYlfbQFMY1Ml7Krq9B",
+  "plain": "{\"itemid\":3001,\"autoSave\":1,\"withoutOld\":null,\"complete\":1,\"studyStartTime\":1748000000,\"userName\":\"测试用户\",\"score\":100,\"pageStudyRecordDTOList\":[{\"pageid\":90011,\"complete\":1,\"studyTime\":273,\"score\":100,\"answerTime\":1,\"submitTimes\":0,\"coursepageId\":null,\"questions\":[],\"videos\":[],\"speaks\":[]},{\"pageid\":90012,\"complete\":1,\"studyTime\":65,\"score\":100,\"answerTime\":1,\"submitTimes\":0,\"coursepageId\":null,\"questions\":[],\"videos\":[{\"videoid\":70001,\"current\":61.5,\"status\":1,\"recordTime\":61.5,\"time\":65,\"startEndTimeList\":[{\"startTime\":1748000100,\"endTime\":1748000161}]}],\"speaks\":[]},{\"pageid\":90013,\"complete\":1,\"studyTime\":273,\"score\":15,\"answerTime\":1,\"submitTimes\":0,\"coursepageId\":90003,\"questions\":[{\"questionid\":50001,\"answerList\":[\"A\"],\"score\":5},{\"questionid\":50002,\"answerList\":[\"B\",\"C\"],\"score\":10}],\"videos\":[],\"speaks\":[]}]}",
+  "parsed": {
+    "itemid": 3001,
+    "autoSave": 1,
+    "withoutOld": null,
+    "complete": 1,
+    "studyStartTime": 1748000000,
+    "userName": "测试用户",
+    "score": 100,
+    "pageStudyRecordDTOList": [
+      {
+        "pageid": 90011,
+        "complete": 1,
+        "studyTime": 273,
+        "score": 100,
+        "answerTime": 1,
+        "submitTimes": 0,
+        "coursepageId": null,
+        "questions": [],
+        "videos": [],
+        "speaks": []
+      },
+      {
+        "pageid": 90012,
+        "complete": 1,
+        "studyTime": 65,
+        "score": 100,
+        "answerTime": 1,
+        "submitTimes": 0,
+        "coursepageId": null,
+        "questions": [],
+        "videos": [
+          {
+            "videoid": 70001,
+            "current": 61.5,
+            "status": 1,
+            "recordTime": 61.5,
+            "time": 65.0,
+            "startEndTimeList": [
+              {
+                "startTime": 1748000100,
+                "endTime": 1748000161
+              }
+            ]
+          }
+        ],
+        "speaks": []
+      },
+      {
+        "pageid": 90013,
+        "complete": 1,
+        "studyTime": 273,
+        "score": 15,
+        "answerTime": 1,
+        "submitTimes": 0,
+        "coursepageId": 90003,
+        "questions": [
+          {
+            "questionid": 50001,
+            "answerList": [
+              "A"
+            ],
+            "score": 5
+          },
+          {
+            "questionid": 50002,
+            "answerList": [
+              "B",
+              "C"
+            ],
+            "score": 10
+          }
+        ],
+        "videos": [],
+        "speaks": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,196 @@
+/* 启动加载屏: 1.4s 周期律动光晕、流光进度条与平滑淡出 */
+
+.uc-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.uc-boot__aurora {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(
+      620px 480px at 45% 36%,
+      color-mix(in srgb, var(--accent) 18%, transparent),
+      transparent 68%
+    ),
+    radial-gradient(
+      560px 440px at 60% 64%,
+      color-mix(in srgb, var(--warm) 12%, transparent),
+      transparent 66%
+    );
+  filter: blur(28px);
+  animation: uc-boot-drift 12s ease-in-out infinite alternate;
+}
+
+.uc-boot__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at center, #000 0%, transparent 68%);
+  -webkit-mask-image: radial-gradient(circle at center, #000 0%, transparent 68%);
+}
+
+.uc-boot__stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(340px, calc(100vw - 48px));
+  transform: translateY(-2vh);
+}
+
+/* 品牌标志容器与周期性流光光环 */
+.uc-boot__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 20px;
+}
+
+.uc-boot__halo {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--accent) 26%, transparent) 0%,
+    transparent 72%
+  );
+  animation: uc-boot-pulse 1.4s ease-in-out infinite;
+}
+
+.uc-boot__ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+  animation: uc-boot-ring 1.4s ease-in-out infinite;
+}
+
+.uc-boot__word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.uc-boot__name {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 760;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.uc-boot__name span {
+  color: var(--accent);
+}
+
+/* 进度条与状态 */
+.uc-boot__meter {
+  width: 100%;
+  max-width: 240px;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.uc-boot__track {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--surface-muted);
+}
+
+.uc-boot__fill {
+  position: relative;
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--warm));
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 40%, transparent);
+  transition: width 0.3s ease;
+}
+
+.uc-boot__fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    transparent 100%
+  );
+  animation: uc-boot-shimmer 1.4s ease-in-out infinite;
+}
+
+.uc-boot__status {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+/* 1.4s 周期动效关键帧 */
+@keyframes uc-boot-pulse {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 0.85;
+  }
+}
+
+@keyframes uc-boot-ring {
+  0%,
+  100% {
+    transform: scale(0.96);
+    border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+  50% {
+    transform: scale(1.05);
+    border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+}
+
+@keyframes uc-boot-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes uc-boot-drift {
+  0% {
+    transform: translate3d(-2%, -2%, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(2%, 2%, 0) scale(1.05);
+  }
+}

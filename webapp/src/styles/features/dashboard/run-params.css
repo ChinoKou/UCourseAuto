@@ -1,0 +1,520 @@
+/* 首页刷课卡: 参数调节面板样式 (模式卡片、折叠容器、冷却滑块、题型时长、安全防护) */
+.uc-run-params {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: none;
+  padding-top: 16px;
+  border-top: 1px solid var(--console-line);
+}
+
+/* 参数分组容器 */
+.uc-param-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.uc-param-group__title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--console-ink);
+}
+
+.uc-param-group__title small {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--console-muted);
+}
+
+/* 运行模式选择卡片 */
+.uc-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 2px;
+  margin: -2px;
+}
+
+.uc-mode-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 44px;
+  padding: 12px 14px;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    transform 0.18s var(--ease-spring),
+    box-shadow 0.18s ease;
+}
+
+.uc-mode-card:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--console-line));
+  background: var(--surface-strong);
+  transform: translateY(-1px);
+}
+
+.uc-mode-card.is-selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 40%, var(--surface-strong));
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.uc-mode-card:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.uc-mode-card__top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uc-mode-card__icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: var(--radius-xs);
+  background: var(--surface-solid);
+  color: var(--accent);
+}
+
+.uc-mode-card.is-selected .uc-mode-card__icon {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.uc-mode-card__name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--console-ink);
+}
+
+
+.uc-mode-card__check {
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--console-line);
+  color: transparent;
+  transition: all 0.18s ease;
+}
+
+.uc-mode-card.is-selected .uc-mode-card__check {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.uc-mode-card__desc {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--console-muted);
+}
+
+/* 高级配置项折叠面板 */
+.uc-accordion {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface-soft) 70%, transparent);
+  overflow: hidden;
+}
+
+.uc-accordion__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--console-ink);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.16s ease;
+}
+
+.uc-accordion__trigger:hover {
+  background: color-mix(in srgb, var(--surface-strong) 60%, transparent);
+}
+
+.uc-accordion__trigger.is-expanded {
+  border-bottom: 1px solid var(--console-line);
+  background: color-mix(in srgb, var(--surface-muted) 40%, transparent);
+}
+
+.uc-accordion__trigger-lead {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  min-width: 0;
+}
+
+.uc-accordion__trigger-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  background: var(--surface-solid);
+  color: var(--accent);
+  flex: none;
+}
+
+.uc-accordion__trigger-label {
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--console-ink);
+  flex: none;
+}
+
+.uc-accordion__arrow {
+  display: grid;
+  place-items: center;
+  color: var(--console-muted);
+  flex: none;
+  transition: transform 0.22s var(--ease-spring);
+}
+
+.uc-accordion__arrow.is-rotated {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+
+.uc-accordion__content {
+  overflow: hidden;
+}
+
+.uc-accordion__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+}
+
+/* 节间冷却面板 */
+.uc-cooldown-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+}
+
+.uc-cooldown-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.uc-cooldown-display {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 3px;
+  width: 68px;
+  flex: none;
+}
+
+.uc-cooldown-display strong {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+}
+
+.uc-cooldown-display span {
+  font-size: 11px;
+  color: var(--console-muted);
+}
+
+.uc-slider {
+  flex: 1;
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.uc-slider::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+}
+
+.uc-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -6.5px;
+  border: 2px solid var(--surface-solid);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.16s ease;
+}
+
+.uc-slider:hover::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+.uc-slider::-moz-range-track {
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+}
+
+.uc-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--surface-solid);
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.uc-slider:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* 逐题型时长卡片列表 */
+.uc-duration-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.uc-duration-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+  transition: border-color 0.16s ease;
+}
+
+.uc-duration-card.has-error {
+  border-color: var(--danger);
+}
+
+.uc-duration-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uc-duration-card__icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: var(--radius-xs);
+  background: var(--surface-solid);
+  color: var(--accent);
+}
+
+.uc-duration-card__label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--console-ink);
+}
+
+.uc-duration-card__hint {
+  display: block;
+  font-size: 10px;
+  color: var(--console-muted);
+}
+
+.uc-duration-inputs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.uc-range-sep {
+  display: grid;
+  place-items: center;
+  color: var(--console-muted);
+  flex: none;
+}
+
+.uc-range-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-strong);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.uc-range-field:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.uc-range-field__prefix {
+  font-size: 10px;
+  color: var(--console-muted);
+  flex: none;
+}
+
+.uc-range-field input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0 3px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--console-ink);
+  text-align: right;
+  appearance: textfield;
+}
+
+.uc-range-field input[aria-invalid="true"] {
+  color: var(--danger);
+}
+
+.uc-range-field__unit {
+  font-size: 10px;
+  color: var(--console-muted);
+  flex: none;
+  margin-left: 2px;
+}
+
+.uc-duration-card .uc-field__error {
+  margin: 0;
+  font-size: 10px;
+  color: var(--danger);
+}
+
+/* 反刷课安全卡片 */
+.uc-anti-card {
+  padding: 10px 14px;
+  border: 1px solid var(--console-line);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+}
+
+.uc-anti-card .uc-switch-row {
+  align-items: center;
+  gap: 14px;
+  padding: 0;
+}
+
+.uc-anti-card .uc-switch-row__text {
+  gap: 2px;
+}
+
+.uc-anti-card .uc-switch-row__title {
+  font-size: 13px;
+  gap: 6px;
+}
+
+.uc-anti-card .uc-switch-row__desc {
+  max-width: none;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--console-muted);
+}
+
+/* 风险确认弹窗内容 */
+.uc-risk {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.uc-risk__banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border: 1px solid color-mix(in srgb, var(--warning) 30%, transparent);
+  border-radius: var(--radius-sm);
+  background: var(--warning-soft);
+  color: var(--warning);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.uc-risk__banner svg {
+  flex: none;
+}
+
+.uc-risk__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 18px;
+  list-style: disc;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.uc-risk__list li::marker {
+  color: var(--warning);
+}
+
+.uc-risk__check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  font-size: 12px;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+  .uc-duration-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .uc-mode-grid {
+    grid-template-columns: 1fr;
+  }
+}

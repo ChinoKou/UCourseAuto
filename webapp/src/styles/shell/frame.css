@@ -1,0 +1,94 @@
+/* 页面骨架: 内容区、页头与路由容器 */
+.uc-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  min-height: calc(100svh - var(--topbar-height));
+  padding: 22px var(--page-pad);
+}
+
+.uc-route {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+.uc-page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+.uc-page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 24px;
+}
+
+.uc-page-head__title-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.uc-page-head__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.uc-page-head__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface-muted);
+  color: var(--ink-2);
+  flex: none;
+}
+
+.uc-page-head h1 {
+  margin-top: 7px;
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 720;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
+}
+
+.uc-page-head p {
+  max-width: 620px;
+  margin-top: 9px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.uc-page-head__actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  padding-bottom: 4px;
+}
+
+@media (max-width: 600px) {
+  .uc-main {
+    padding: 10px var(--page-pad) max(24px, env(safe-area-inset-bottom, 24px));
+  }
+
+  .uc-page-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}

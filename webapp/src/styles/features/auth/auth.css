@@ -1,0 +1,283 @@
+/* 登录与账号认证页: 居中聚焦卡片架构, 桌面与移动端统一 */
+
+.uc-auth {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  width: 100%;
+  padding: 32px 16px;
+  background:
+    radial-gradient(
+      640px 420px at 50% 28%,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      transparent 70%
+    ),
+    var(--bg);
+  box-sizing: border-box;
+}
+
+.uc-auth__card {
+  position: relative;
+  width: 100%;
+  max-width: 410px;
+  padding: 32px 28px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--surface-solid);
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.14),
+    0 0 0 1px color-mix(in srgb, var(--accent) 10%, transparent);
+  box-sizing: border-box;
+}
+
+/* 返回按钮 */
+.uc-auth__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: color 0.16s ease;
+}
+
+.uc-auth__back:hover {
+  color: var(--accent);
+}
+
+/* 头部: 品牌标识与标题 */
+.uc-auth__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.uc-auth__brand {
+  margin-bottom: 10px;
+}
+
+.uc-auth__title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.uc-auth__desc {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+/* 模式切换 Tab 胶囊 */
+.uc-auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin-bottom: 16px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface-muted);
+}
+
+.uc-auth-tabs button {
+  height: 32px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-3);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.16s ease,
+    color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.uc-auth-tabs button.is-active {
+  background: var(--surface-solid);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 已保存账号列表 */
+.uc-auth-accounts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.uc-account-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease,
+    transform 0.16s var(--ease-out);
+}
+
+.uc-account-card:hover:not(:disabled) {
+  border-color: var(--line-strong);
+  background: var(--surface-solid);
+  transform: translateY(-1px);
+}
+
+.uc-account-card.is-active {
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  background: var(--accent-soft);
+}
+
+.uc-account-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.uc-account-card__name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.uc-account-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10.5px;
+  color: var(--ink-3);
+}
+
+.uc-account-card__arrow {
+  flex: none;
+  color: var(--ink-3);
+  transition: transform 0.16s ease, color 0.16s ease;
+}
+
+.uc-account-card:hover .uc-account-card__arrow {
+  transform: translateX(2px);
+  color: var(--accent);
+}
+
+/* 账号密码表单 */
+.uc-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.uc-auth-form .uc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.uc-auth-form .uc-field__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.uc-auth-form .uc-field__label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.uc-auth-form .uc-field__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.uc-auth-form .uc-field__link:hover {
+  text-decoration: underline;
+}
+
+.uc-auth__switch-link {
+  align-self: center;
+  margin-top: 2px;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: color 0.16s ease;
+}
+
+.uc-auth__switch-link:hover {
+  color: var(--accent);
+}
+
+/* 底部安全提示 */
+.uc-auth__privacy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 16px 0 0;
+  font-size: 10.5px;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+.uc-auth__privacy svg {
+  flex: none;
+}
+
+/* 移动端屏幕适配 */
+@media (max-width: 480px) {
+  .uc-auth {
+    padding: 16px 12px;
+  }
+
+  .uc-auth__card {
+    padding: 22px 16px 18px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  .uc-auth__title {
+    font-size: 18px;
+  }
+
+  .uc-auth__desc {
+    font-size: 11.5px;
+  }
+}

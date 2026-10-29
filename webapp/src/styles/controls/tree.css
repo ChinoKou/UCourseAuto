@@ -1,0 +1,360 @@
+/* 课件树: 五层节点共用的行、引导线与完成条 */
+.uc-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-height: 0;
+}
+
+.uc-tree__row {
+  --indent-base: 4px;
+  --indent-step: 8px;
+  --indent: calc(var(--indent-base) + var(--depth) * var(--indent-step));
+  --tree-rail: var(--line-strong);
+  --guide-color: var(--line);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 8px 0 var(--indent);
+  border-radius: var(--radius-xs);
+  color: var(--ink-2);
+  animation: uc-tree-in 0.2s var(--ease-out);
+  transition: background-color 0.16s ease, border-color 0.16s ease;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--guide-color) 0px,
+    var(--guide-color) 1px,
+    transparent 1px,
+    transparent var(--indent-step)
+  );
+  background-size: calc(var(--depth) * var(--indent-step)) 100%;
+  background-repeat: no-repeat;
+  background-position: var(--indent-base) 0;
+}
+
+.uc-tree__row.tone-course {
+  min-height: 44px;
+}
+
+.uc-tree__row.tone-textbook {
+  min-height: 40px;
+}
+
+.uc-tree__row.tone-chapter {
+  min-height: 36px;
+}
+
+.uc-tree__row.tone-section,
+.uc-tree__row.tone-page {
+  min-height: 33px;
+}
+
+@keyframes uc-tree-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+.uc-tree__row:hover {
+  background-color: color-mix(in srgb, var(--surface-muted) 74%, transparent);
+}
+
+.uc-tree__row.is-current {
+  --tree-rail: var(--accent);
+  --guide-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+  background-color: var(--accent-soft);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.uc-tree__row.is-path {
+  --tree-rail: var(--accent-2);
+}
+
+.uc-tree__row.is-done {
+  --tree-rail: var(--success);
+}
+
+.uc-tree__row.is-active {
+  --tree-rail: var(--accent);
+  background-color: color-mix(in srgb, var(--accent-soft) 85%, transparent);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.uc-tree__row.is-error {
+  --tree-rail: var(--danger);
+  background-color: var(--danger-soft);
+  box-shadow: inset 2px 0 0 var(--danger);
+}
+
+.uc-tree__row.is-skipped {
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+
+.uc-tree__lead {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.uc-tree__main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  align-self: stretch;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.uc-tree__toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--ink-3);
+}
+
+.uc-tree__toggle svg {
+  transition: transform 0.18s var(--ease-out);
+}
+
+.uc-tree__main[aria-expanded="true"] .uc-tree__toggle svg {
+  transform: rotate(90deg);
+}
+
+.uc-tree__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: none;
+  border-radius: 6px;
+  background: var(--surface-muted);
+  color: var(--ink-3);
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.uc-tree__row.tone-course .uc-tree__icon {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.uc-tree__row.tone-textbook .uc-tree__icon {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.uc-tree__row.tone-chapter .uc-tree__icon {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.uc-tree__row.is-done .uc-tree__icon {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.uc-tree__row.is-current .uc-tree__icon,
+.uc-tree__row.is-active .uc-tree__icon {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.uc-tree__row.is-error .uc-tree__icon {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+.uc-tree__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.uc-tree__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.uc-tree__row.tone-course .uc-tree__title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.uc-tree__row.tone-textbook .uc-tree__title {
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.uc-tree__row.tone-section .uc-tree__title,
+.uc-tree__row.tone-page .uc-tree__title {
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.uc-tree__row.is-current .uc-tree__title,
+.uc-tree__row.is-active .uc-tree__title {
+  color: var(--ink);
+}
+
+.uc-tree__row.is-error .uc-tree__title {
+  color: var(--danger);
+}
+
+.uc-tree__row.is-done .uc-tree__title {
+  color: var(--ink-2);
+}
+
+.uc-tree__meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 9.5px;
+  color: var(--ink-3);
+}
+
+.uc-tree__error-hint {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 9.5px;
+  color: var(--danger);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.uc-tree__tail {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding-left: 6px;
+  font-size: 9.5px;
+  color: var(--ink-3);
+}
+
+.uc-tree__count {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--ink-3);
+}
+
+.uc-tree__progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+}
+
+.uc-tree__progress-ring {
+  display: block;
+  flex: none;
+}
+
+.uc-tree__progress-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-2);
+  min-width: 32px;
+  text-align: right;
+}
+
+.uc-tree__rail {
+  position: absolute;
+  left: var(--indent);
+  right: 8px;
+  bottom: 1px;
+  height: 2px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--surface-muted);
+}
+
+.uc-tree__rail > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--tree-rail);
+  transform-origin: left center;
+  transition: transform 0.5s var(--ease-out);
+}
+
+@media (max-width: 700px) {
+  .uc-tree__row {
+    --indent-base: 3px;
+    --indent-step: 6px;
+    padding-right: 6px;
+  }
+
+  .uc-tree__tail {
+    padding-left: 2px;
+  }
+
+  .uc-tree__rail {
+    right: 6px;
+  }
+}
+
+@media (max-width: 560px) {
+  .uc-tree__row {
+    --indent-base: 2px;
+    --indent-step: 4px;
+    gap: 4px;
+    padding-right: 8px;
+  }
+
+  .uc-tree__main {
+    gap: 4px;
+  }
+
+  .uc-tree__icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+  }
+
+  .uc-tree__icon svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .uc-tree__tail {
+    gap: 2px;
+    padding-left: 1px;
+  }
+
+  .uc-tree__progress {
+    gap: 2px;
+  }
+
+  .uc-tree__progress-ring {
+    width: 13px;
+    height: 13px;
+  }
+
+  .uc-tree__progress-text {
+    min-width: 24px;
+    font-size: 9.5px;
+  }
+
+  .uc-tree__rail {
+    right: 8px;
+  }
+}

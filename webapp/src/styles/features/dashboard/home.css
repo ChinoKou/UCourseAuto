@@ -1,0 +1,60 @@
+/* 首页: 刷课卡与课件库卡并排占满内容区 */
+.uc-home {
+  min-height: 0;
+}
+
+.uc-home-grid {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+  min-height: 0;
+}
+
+.uc-home-grid > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.uc-home-grid__run {
+  grid-column: span 7;
+}
+
+.uc-home-grid__library {
+  grid-column: span 5;
+}
+
+@media (max-width: 1150px) {
+  .uc-home-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .uc-home-grid__run {
+    grid-column: auto;
+    width: 100%;
+    min-height: 560px;
+  }
+
+  .uc-home-grid__library {
+    grid-column: auto;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    max-height: clamp(620px, 76vh, 840px);
+  }
+}
+
+@media (max-width: 600px) {
+  .uc-home-grid {
+    gap: 10px;
+    padding-bottom: 24px;
+  }
+
+  .uc-home-grid__library {
+    min-height: 0;
+    max-height: clamp(560px, 80vh, 860px);
+  }
+}

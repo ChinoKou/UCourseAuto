@@ -1,0 +1,160 @@
+/* 标签、徽标、状态胶囊与提示块 */
+.uc-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 21px;
+  padding: 0 7px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: var(--surface-muted);
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.uc-tag--accent {
+  border-color: color-mix(in srgb, var(--accent) 26%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.uc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  font-size: 10.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.uc-badge--success {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.uc-badge--warning {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.uc-badge--danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.uc-badge--muted {
+  background: var(--surface-muted);
+  color: var(--ink-3);
+}
+
+.uc-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.uc-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 29px;
+  padding: 0 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface-muted);
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.uc-status-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-3);
+}
+
+.uc-status-pill.is-live {
+  border-color: color-mix(in srgb, var(--success) 26%, transparent);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.uc-status-pill.is-warning {
+  border-color: color-mix(in srgb, var(--warning) 26%, transparent);
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.uc-status-pill.is-warning .uc-status-pill__dot {
+  background: var(--warning);
+}
+
+.uc-status-pill.is-live .uc-status-pill__dot {
+  background: var(--success);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 50%, transparent);
+  animation: uc-pulse 1.8s ease-out infinite;
+}
+
+@keyframes uc-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 46%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 7px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.uc-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.uc-alert > svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+.uc-alert--danger {
+  border-color: color-mix(in srgb, var(--danger) 28%, transparent);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.uc-alert--warning {
+  border-color: color-mix(in srgb, var(--warning) 28%, transparent);
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.uc-alert strong {
+  display: block;
+  color: currentColor;
+  font-size: 12.5px;
+}
+
+.uc-alert p {
+  margin-top: 4px;
+  color: inherit;
+  opacity: 0.85;
+}

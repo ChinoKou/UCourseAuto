@@ -32,6 +32,7 @@
 本仓库按子项目划分，每个子项目目录内有自己的 AGENTS.md，收录该子项目的工程规范（目录结构、分层边界、工具链、类型安全、代码规范）。在子项目内工作时，其 AGENTS.md 与本文件同时有效。
 
 - `cli/` — 命令行工具子项目（Python 3.12+），规范见 `cli/AGENTS.md`
+- `webapp/` — 静态网页子项目（Node 24 + Bun + Vite 8 + React 19 + TypeScript），规范见 `webapp/AGENTS.md`
 
 ## 3. 代码与文档约定
 

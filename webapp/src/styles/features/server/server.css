@@ -1,0 +1,326 @@
+/* 站点: 选择下拉与管理弹层 */
+.uc-server-control {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.uc-server-control .uc-server-trigger {
+  flex: 1;
+}
+
+.uc-server-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 54px;
+  padding: 7px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-strong);
+  text-align: left;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.uc-server-trigger:hover {
+  border-color: color-mix(in srgb, var(--accent) 34%, var(--line-strong));
+}
+
+.uc-server-trigger[data-popup-open] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.uc-server-trigger__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.uc-server-trigger__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.uc-server-trigger__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.uc-server-trigger__host {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--ink-3);
+}
+
+.uc-server-trigger__chevron {
+  display: inline-flex;
+  color: var(--ink-3);
+  transition: transform 0.2s ease;
+}
+
+.uc-server-trigger[data-popup-open] .uc-server-trigger__chevron {
+  transform: rotate(180deg);
+}
+
+.uc-server-manage {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  flex: none;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-strong);
+  color: var(--ink-2);
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease,
+    background 0.18s ease;
+}
+
+.uc-server-manage:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.uc-server-manage[hidden] {
+  display: none;
+}
+
+.uc-select-positioner {
+  z-index: 220;
+}
+
+.uc-select-popup {
+  min-width: var(--anchor-width, 260px);
+  max-width: min(430px, calc(100vw - 30px));
+  padding: 5px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-lg);
+  transform-origin: top;
+  transition:
+    opacity 0.18s ease,
+    transform 0.22s var(--ease-out);
+}
+
+.uc-select-popup[data-starting-style],
+.uc-select-popup[data-ending-style] {
+  opacity: 0;
+  transform: translateY(-5px) scale(0.985);
+}
+
+.uc-select-list {
+  max-height: 320px;
+  overflow: auto;
+  outline: 0;
+}
+
+.uc-server-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--radius-xs);
+  cursor: default;
+  outline: 0;
+}
+
+.uc-server-option[data-highlighted],
+.uc-server-option:hover {
+  background: var(--surface-muted);
+}
+
+.uc-server-option[data-selected] {
+  background: var(--accent-soft);
+}
+
+.uc-server-option__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--surface-muted);
+  color: var(--ink-2);
+}
+
+.uc-server-option__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.uc-server-option__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.uc-server-option__host {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--ink-3);
+}
+
+.uc-server-option__check {
+  display: inline-flex;
+  color: var(--accent);
+}
+
+/* 服务器管理 */
+.uc-server-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.uc-server-list__empty {
+  padding: 18px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.uc-server-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.uc-server-row--custom {
+  background: var(--surface-muted);
+}
+
+.uc-server-row__icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 9px;
+  background: var(--surface-muted);
+  color: var(--ink-2);
+}
+
+.uc-server-row__icon--custom {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.uc-server-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.uc-server-row__name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.uc-server-row__host {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--ink-3);
+}
+
+.uc-server-row__used {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+
+.uc-server-row__lock {
+  display: inline-flex;
+  color: var(--ink-3);
+}
+
+.uc-server-row__actions,
+.uc-server-row__confirm {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+
+.uc-server-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.uc-server-preview {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  font-size: 11.5px;
+}
+
+.uc-server-preview__label {
+  color: var(--ink-3);
+}
+
+.uc-server-preview__name {
+  font-weight: 650;
+}
+
+.uc-server-preview__host {
+  margin-left: auto;
+  font-size: 9.5px;
+  color: var(--ink-3);
+}
+
+.uc-form-note {
+  padding: 9px 12px;
+  border-radius: var(--radius-xs);
+  background: var(--warning-soft);
+  color: var(--warning);
+  font-size: 11px;
+  line-height: 1.55;
+}

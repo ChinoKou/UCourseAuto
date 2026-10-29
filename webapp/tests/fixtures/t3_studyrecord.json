@@ -1,0 +1,58 @@
+{
+  "completion_status": 1,
+  "learner_id": 2025001,
+  "learner_name": "测试学生",
+  "relationid": 1011,
+  "customized": 0,
+  "activity_title": "第一节 函数",
+  "item_id": 1011,
+  "node_id": 101,
+  "score": 100,
+  "studyTime": 690,
+  "pageStudyRecordDTOList": [
+    {
+      "pageid": 601,
+      "complete": 1,
+      "submitTimes": 0,
+      "studyTime": 300,
+      "answerTime": 0,
+      "videos": null,
+      "questions": null,
+      "coursepageId": null
+    },
+    {
+      "pageid": 602,
+      "complete": 0,
+      "submitTimes": 0,
+      "studyTime": 150,
+      "answerTime": 0,
+      "videos": [
+        {
+          "videoid": 8002,
+          "current": 150.5,
+          "status": 1,
+          "recordTime": 150,
+          "time": 300,
+          "startEndTimeList": [
+            { "startTime": 1790000000, "endTime": 1790000150 }
+          ]
+        }
+      ],
+      "questions": null,
+      "coursepageId": null
+    },
+    {
+      "pageid": 606,
+      "complete": 1,
+      "submitTimes": 1,
+      "studyTime": 240,
+      "answerTime": 3,
+      "videos": null,
+      "questions": [
+        { "questionid": 9001, "answerList": ["A"], "score": 2 },
+        { "questionid": 9002, "answerList": ["A", "C"], "score": 3 }
+      ],
+      "coursepageId": 506
+    }
+  ]
+}

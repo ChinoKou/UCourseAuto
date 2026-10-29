@@ -1,0 +1,157 @@
+/* 设计令牌: 颜色、字体、圆角、阴影与动效曲线 */
+:root {
+  --font-sans:
+    "Manrope Variable", "PingFang SC", "HarmonyOS Sans SC",
+    "Microsoft YaHei UI", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono:
+    "IBM Plex Mono", "Cascadia Code", "SFMono-Regular", ui-monospace, monospace;
+
+  --radius-xs: 8px;
+  --radius-sm: 11px;
+  --radius-md: 15px;
+  --radius-lg: 21px;
+  --radius-xl: 27px;
+  --radius-2xl: 34px;
+  --radius-pill: 999px;
+
+  --page-pad: 30px;
+  --topbar-height: 76px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ring-from: var(--accent);
+  --ring-to: var(--warm);
+
+  --stage-bg: #16141b;
+  --stage-bg-soft: #211d2a;
+  --stage-ink: #f8f4eb;
+  --stage-muted: rgba(248, 244, 235, 0.64);
+  --stage-line: rgba(248, 244, 235, 0.12);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --page-pad: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --page-pad: 8px;
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --run-stage-bg: #f3efe7;
+  --run-stage-bg-soft: #ffffff;
+  --run-stage-ink: #191816;
+
+  --bg: #f1eee8;
+  --bg-deep: #e7e2d7;
+  --surface: rgba(255, 255, 255, 0.68);
+  --surface-strong: rgba(255, 255, 255, 0.86);
+  --surface-solid: #fbf9f5;
+  --surface-soft: rgba(255, 255, 255, 0.42);
+  --surface-muted: rgba(25, 24, 22, 0.035);
+
+  --ink: #191816;
+  --ink-2: #565149;
+  --ink-3: #6f695f;
+  --line: rgba(25, 24, 22, 0.085);
+  --line-strong: rgba(25, 24, 22, 0.16);
+
+  --accent: #4f46d8;
+  --accent-strong: #3f37c9;
+  --accent-2: #7a70ff;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(79, 70, 216, 0.1);
+  --accent-soft-2: rgba(79, 70, 216, 0.17);
+
+  --warm: #d9822b;
+  --warm-soft: rgba(217, 130, 43, 0.12);
+  --success: #0e7a55;
+  --success-soft: rgba(14, 122, 85, 0.1);
+  --warning: #a8670a;
+  --warning-soft: rgba(168, 103, 10, 0.12);
+  --danger: #c23b3b;
+  --danger-soft: rgba(194, 59, 59, 0.1);
+  --info: #226d9c;
+  --info-soft: rgba(34, 109, 156, 0.1);
+
+  --panel: #1a181c;
+  --panel-soft: #242129;
+  --panel-ink: #f7f3ea;
+  --panel-muted: rgba(247, 243, 234, 0.62);
+  --panel-line: rgba(255, 255, 255, 0.1);
+
+  --shadow-sm:
+    0 1px 2px rgba(42, 35, 22, 0.05), 0 12px 28px -20px rgba(42, 35, 22, 0.24);
+  --shadow-md:
+    0 2px 4px rgba(42, 35, 22, 0.04), 0 26px 54px -30px rgba(42, 35, 22, 0.3);
+  --shadow-lg:
+    0 3px 6px rgba(42, 35, 22, 0.04), 0 44px 90px -40px rgba(42, 35, 22, 0.38);
+  --shadow-accent: 0 18px 40px -18px rgba(79, 70, 216, 0.5);
+  --highlight: rgba(255, 255, 255, 0.72);
+  --grain: rgba(30, 26, 20, 0.028);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --run-stage-bg: #16141b;
+  --run-stage-bg-soft: #211d2a;
+  --run-stage-ink: #f8f4eb;
+
+  --bg: #0c0c0e;
+  --bg-deep: #101014;
+  --surface: rgba(25, 25, 31, 0.64);
+  --surface-strong: rgba(31, 31, 38, 0.84);
+  --surface-solid: #17171c;
+  --surface-soft: rgba(255, 255, 255, 0.035);
+  --surface-muted: rgba(255, 255, 255, 0.045);
+
+  --ink: #f4f1e9;
+  --ink-2: #b4aea3;
+  --ink-3: #8a8479;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.15);
+
+  --accent: #8b85ff;
+  --accent-strong: #a9a3ff;
+  --accent-2: #6f67e8;
+  --accent-ink: #151223;
+  --accent-soft: rgba(139, 133, 255, 0.12);
+  --accent-soft-2: rgba(139, 133, 255, 0.22);
+
+  --warm: #f0b35e;
+  --warm-soft: rgba(240, 179, 94, 0.12);
+  --success: #55d8a6;
+  --success-soft: rgba(85, 216, 166, 0.1);
+  --warning: #f0b35e;
+  --warning-soft: rgba(240, 179, 94, 0.12);
+  --danger: #ff7d7d;
+  --danger-soft: rgba(255, 125, 125, 0.12);
+  --info: #7cc6ff;
+  --info-soft: rgba(124, 198, 255, 0.12);
+
+  --panel: #15151a;
+  --panel-soft: #1d1d24;
+  --panel-ink: #f7f3ea;
+  --panel-muted: rgba(247, 243, 234, 0.6);
+  --panel-line: rgba(255, 255, 255, 0.1);
+
+  --shadow-sm:
+    0 1px 2px rgba(0, 0, 0, 0.4), 0 14px 30px -22px rgba(0, 0, 0, 0.7);
+  --shadow-md:
+    0 2px 6px rgba(0, 0, 0, 0.32), 0 28px 60px -30px rgba(0, 0, 0, 0.8);
+  --shadow-lg:
+    0 4px 10px rgba(0, 0, 0, 0.36), 0 50px 100px -40px rgba(0, 0, 0, 0.9);
+  --shadow-accent: 0 22px 48px -22px rgba(111, 103, 232, 0.55);
+  --highlight: rgba(255, 255, 255, 0.08);
+  --grain: rgba(255, 255, 255, 0.022);
+}
