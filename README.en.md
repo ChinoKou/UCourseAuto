@@ -4,7 +4,7 @@ English | [简体中文](README.md)
 
 ## What is UCourseAuto?
 
-UCourseAuto is an automation tool designed to complete courseware on the ULearning platform, available in both web and command-line interfaces.
+UCourseAuto automates courseware tasks on the ULearning platform through a protocol client implemented in this repository, available as both a web app and a command-line tool.
 
 - **Web Version (Online)**: A pure static client-side web application deployed on Cloudflare Pages. All network requests are sent directly from your browser to the ULearning platform with no backend server involved, eliminating the need to set up local environments.
 - **CLI Version (Local)**: A terminal-based interactive utility written in Python, distributed as standalone binary executables or runnable directly from source code.
@@ -139,7 +139,7 @@ Notes:
 - If a network failure occurs during the first stage and retries are exhausted, study records for reported sections may be lost.
 - Interrupting the execution after the first stage leaves the courseware completed with 0 duration, which can be identified during manual inspection.
 
-## How It Works
+## How It Works (CLI Version)
 
 ```mermaid
 sequenceDiagram
