@@ -13,5 +13,4 @@ Thumbs.db
 .zcode/
 
 # Development Docs
-docs/plan/
-docs/research/
+docs/dev
