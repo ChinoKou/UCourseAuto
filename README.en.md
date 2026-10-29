@@ -18,8 +18,9 @@ UCourseAuto automates courseware tasks on the ULearning platform through a proto
 - Customizable study durations (independent duration and random jitter for video, document, and question types)
 - Configurable cooling intervals between sections
 - Multi-account management with fast switching
+- Anti-detection mode (experimental)
 - Five-level courseware tree visual configuration (Course, Textbook, Chapter, Section, Page), supporting hierarchical selection and row-level removal
-- Supported sites: ULearning Main Site https://www.ulearning.cn, Dongguan University of Technology https://lms.dgut.edu.cn
+- Supported sites: ULearning Main Site https://www.ulearning.cn Dongguan University of Technology https://lms.dgut.edu.cn
 
 About the main site: the maintainer has no main-site data available for debugging, so main-site availability cannot be continuously verified — PRs are welcome
 
