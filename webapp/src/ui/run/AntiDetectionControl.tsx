@@ -51,13 +51,10 @@ export function AntiDetectionControl({ disabled = false }: AntiDetectionControlP
           disabled={disabled}
           label="反刷课检测"
           badge={
-            antiDetection ? (
-              <span className="uc-badge uc-badge--warning">已开启</span>
-            ) : (
-              <span className="uc-badge">未开启</span>
-            )
+            <span className="uc-badge uc-badge--experimental">
+              实验性功能
+            </span>
           }
-          description="每个教材先以 0 时长上报尝试短路平台检测，触发 information 验证后再上报真实学习时长。"
         />
       </div>
 

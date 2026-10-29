@@ -1,13 +1,13 @@
 import {
   IconAdjustmentsHorizontal,
+  IconArrowRight,
   IconBook2,
   IconChevronDown,
   IconFileText,
   IconHelpCircle,
-  IconPlayerTrackNext,
 } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 
 import type { StudyTime } from "@/schema/domain/config";
 import { useConfigStore } from "@/state/configStore";
@@ -30,7 +30,6 @@ type StudyTimeKey = keyof StudyTime;
 interface StudyTypeMeta {
   key: StudyTimeKey;
   label: string;
-  hint: string;
   icon: typeof IconHelpCircle;
 }
 
@@ -38,22 +37,49 @@ const STUDY_TYPES: ReadonlyArray<StudyTypeMeta> = [
   {
     key: "question",
     label: "题目页面",
-    hint: "测验、作业与互动答题",
     icon: IconHelpCircle,
   },
   {
     key: "document",
     label: "文档页面",
-    hint: "PDF、讲义与参考材料",
     icon: IconFileText,
   },
   {
     key: "content",
     label: "纯文本页面",
-    hint: "富文本导学与章节阅读",
     icon: IconBook2,
   },
 ];
+
+type CooldownTone = "fast" | "normal" | "slow";
+
+interface CooldownPace {
+  tone: CooldownTone;
+  label: string;
+  hint: string;
+}
+
+const resolveCooldownPace = (seconds: number): CooldownPace => {
+  if (seconds < 0.5) {
+    return {
+      tone: "fast",
+      label: "极速",
+      hint: "间隔过短",
+    };
+  }
+  if (seconds <= 2.0) {
+    return {
+      tone: "normal",
+      label: "均衡",
+      hint: "推荐区间",
+    };
+  }
+  return {
+    tone: "slow",
+    label: "从容",
+    hint: "节奏较慢",
+  };
+};
 
 export interface RunSettingsProps {
   disabled: boolean;
@@ -73,6 +99,9 @@ export function RunSettings({ disabled, onValidityChange }: RunSettingsProps) {
     content: draftFrom(config.study_time.content),
   }));
   const [sleepDraft, setSleepDraft] = useState(config.sleep_time);
+
+  const cooldownPace = resolveCooldownPace(sleepDraft);
+  const cooldownRatio = Math.min(100, Math.max(0, (sleepDraft / 10) * 100));
 
   const settingsValid =
     isRangeValid(drafts.question) &&
@@ -153,39 +182,83 @@ export function RunSettings({ disabled, onValidityChange }: RunSettingsProps) {
             >
               <div className="uc-accordion__inner">
                 {/* 节间冷却滑块 */}
-                <div className="uc-param-group">
+                <div
+                  className={`uc-param-group uc-cooldown-group tone-${cooldownPace.tone}`}
+                >
                   <div className="uc-param-group__title">
-                    <label htmlFor="uc-cooldown-slider">节间冷却间隔</label>
+                    <div className="uc-cooldown-title-row">
+                      <label htmlFor="uc-cooldown-slider">节间冷却间隔</label>
+                      <span
+                        className={`uc-badge uc-cooldown-badge tone-${cooldownPace.tone}`}
+                      >
+                        {cooldownPace.label} · {cooldownPace.hint}
+                      </span>
+                    </div>
                     <small>每处理完一个完整小节后休眠等待的时长</small>
                   </div>
-                  <div className="uc-cooldown-panel">
+                  <div
+                    className="uc-cooldown-panel"
+                    style={
+                      {
+                        "--cooldown-ratio": `${cooldownRatio}%`,
+                      } as CSSProperties
+                    }
+                  >
                     <div className="uc-cooldown-slider-row">
-                      <input
-                        id="uc-cooldown-slider"
-                        type="range"
-                        className="uc-slider"
-                        min={0}
-                        max={10}
-                        step={0.1}
-                        value={sleepDraft}
-                        aria-valuetext={`${sleepDraft.toFixed(1)} 秒`}
-                        disabled={disabled}
-                        onChange={(event) => {
-                          setSleepDraft(Number(event.currentTarget.value));
-                        }}
-                        onPointerUp={() => {
-                          commitSleep(sleepDraft);
-                        }}
-                        onKeyUp={() => {
-                          commitSleep(sleepDraft);
-                        }}
-                        onBlur={() => {
-                          commitSleep(sleepDraft);
-                        }}
-                      />
-                      <div className="uc-cooldown-display uc-mono">
+                      <div className="uc-cooldown-track-wrap">
+                        <input
+                          id="uc-cooldown-slider"
+                          type="range"
+                          className="uc-slider"
+                          min={0}
+                          max={10}
+                          step={0.1}
+                          value={sleepDraft}
+                          aria-valuetext={`${sleepDraft.toFixed(1)} 秒 (${cooldownPace.label})`}
+                          disabled={disabled}
+                          onChange={(event) => {
+                            setSleepDraft(Number(event.currentTarget.value));
+                          }}
+                          onPointerUp={() => {
+                            commitSleep(sleepDraft);
+                          }}
+                          onKeyUp={() => {
+                            commitSleep(sleepDraft);
+                          }}
+                          onBlur={() => {
+                            commitSleep(sleepDraft);
+                          }}
+                        />
+                        <div className="uc-cooldown-scale" aria-hidden="true">
+                          <span
+                            className="uc-cooldown-scale__item"
+                            style={{ left: "0%" }}
+                          >
+                            0s
+                          </span>
+                          <span
+                            className="uc-cooldown-scale__item"
+                            style={{ left: "5%" }}
+                          >
+                            0.5s
+                          </span>
+                          <span
+                            className="uc-cooldown-scale__item"
+                            style={{ left: "20%" }}
+                          >
+                            2s
+                          </span>
+                          <span
+                            className="uc-cooldown-scale__item"
+                            style={{ left: "100%" }}
+                          >
+                            10s
+                          </span>
+                        </div>
+                      </div>
+                      <div className="uc-cooldown-display">
                         <strong>{sleepDraft.toFixed(1)}</strong>
-                        <span>秒</span>
+                        <span className="uc-cooldown-unit">秒</span>
                       </div>
                     </div>
                   </div>
@@ -214,14 +287,9 @@ export function RunSettings({ disabled, onValidityChange }: RunSettingsProps) {
                             <span className="uc-duration-card__icon" aria-hidden="true">
                               <Icon size={16} />
                             </span>
-                            <div>
-                              <strong className="uc-duration-card__label">
-                                {typeMeta.label}
-                              </strong>
-                              <span className="uc-duration-card__hint">
-                                {typeMeta.hint}
-                              </span>
-                            </div>
+                            <strong className="uc-duration-card__label">
+                              {typeMeta.label}
+                            </strong>
                           </div>
 
                           <div className="uc-duration-inputs">
@@ -244,7 +312,7 @@ export function RunSettings({ disabled, onValidityChange }: RunSettingsProps) {
                             </div>
 
                             <span className="uc-range-sep" aria-hidden="true">
-                              <IconPlayerTrackNext size={12} />
+                              <IconArrowRight size={12} />
                             </span>
 
                             <div className="uc-range-field">
