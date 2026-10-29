@@ -12,7 +12,6 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
-import { reportWarning } from "@/error/report";
 import { summarizeCourseware } from "@/logic/courseware/statistics";
 import { accountKeyOf } from "@/schema/domain/config";
 import { findSite } from "@/schema/domain/site";
@@ -30,6 +29,7 @@ import { HomeScreen } from "@/ui/home/HomeScreen";
 import { LibraryScreen } from "@/ui/library/LibraryScreen";
 import { pageTransition } from "@/ui/motion/presets";
 import { ThemeToggle } from "@/ui/theme/ThemeToggle";
+import { useWakeLock } from "@/ui/common/wakeLock";
 
 export interface AppShellProps {
   onAddAccount?: () => void;
@@ -51,42 +51,6 @@ const NAV_ITEMS = [
 /** GitHub 仓库地址 */
 const REPOSITORY_URL = "https://github.com/ChinoKou/UCourseAuto";
 
-/** 刷课开始后保持屏幕常亮 */
-const useWakeLock = (active: boolean): void => {
-  useEffect(() => {
-    if (!active) {
-      return undefined;
-    }
-    let sentinel: WakeLockSentinel | null = null;
-    const request = (): void => {
-      if (navigator.wakeLock === undefined) {
-        return;
-      }
-      navigator.wakeLock
-        .request("screen")
-        .then((lock) => {
-          sentinel = lock;
-        })
-        .catch(() => {
-          reportWarning("屏幕常亮没有开启", "浏览器拒绝了屏幕常亮请求。");
-        });
-    };
-    const handleVisibility = (): void => {
-      if (document.visibilityState === "visible") {
-        request();
-      }
-    };
-    request();
-    document.addEventListener("visibilitychange", handleVisibility);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
-      if (sentinel !== null) {
-        void sentinel.release();
-      }
-    };
-  }, [active]);
-};
-
 /** 应用外壳: 顶栏、账号入口、路由切换与运行提示 */
 export function AppShell({ onAddAccount, onLogin }: AppShellProps) {
   const { route, configure } = useRoute();
@@ -98,7 +62,7 @@ export function AppShell({ onAddAccount, onLogin }: AppShellProps) {
   const [accountOpen, setAccountOpen] = useState(false);
 
   const runBusy = phase === "running" || phase === "stopping";
-  useWakeLock(runBusy);
+  useWakeLock(runBusy, "run");
 
   useEffect(() => {
     document.title = `${ROUTE_TITLES[route]} · UCourseAuto`;
@@ -153,7 +117,9 @@ export function AppShell({ onAddAccount, onLogin }: AppShellProps) {
         }
         return (
           <div className="uc-gate-wrapper">
-            <DashboardScreen previewUser={PREVIEW_USER} />
+            <div inert={true} style={{ display: "contents" }}>
+              <DashboardScreen previewUser={PREVIEW_USER} />
+            </div>
             <AuthGateOverlay
               title="登录以使用工作台"
               description="工作台需要使用您的优学院账号凭证加载课件与执行推进。账号数据保存在当前浏览器的本地存储中。"
@@ -174,11 +140,13 @@ export function AppShell({ onAddAccount, onLogin }: AppShellProps) {
         }
         return (
           <div className="uc-gate-wrapper">
-            <LibraryScreen
-              key="guest_preview_library"
-              initialConfigure={false}
-              previewUser={PREVIEW_USER}
-            />
+            <div inert={true} style={{ display: "contents" }}>
+              <LibraryScreen
+                key="guest_preview_library"
+                initialConfigure={false}
+                previewUser={PREVIEW_USER}
+              />
+            </div>
             <AuthGateOverlay
               title="登录以查看课件库"
               description="课件库需要使用您的优学院账号凭证拉取课程结构与学习进度。账号数据保存在当前浏览器的本地存储中。"

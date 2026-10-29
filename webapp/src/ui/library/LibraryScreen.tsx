@@ -349,7 +349,9 @@ export function LibraryScreen({
   const toast = useToast();
   const courses = activeUser?.courses ?? EMPTY_COURSES;
 
-  const [wizardOpen, setWizardOpen] = useState(initialConfigure);
+  const [wizardOpen, setWizardOpen] = useState(
+    initialConfigure && storeUser !== null,
+  );
   const [requestedCourseId, setActiveCourseId] = useState<number | null>(null);
   const [query, setQuery] = useState("");
   const [incompleteOnly, setIncompleteOnly] = useState(false);
@@ -648,6 +650,13 @@ export function LibraryScreen({
     setUserExpandedNodes(new Set());
   };
 
+  const openWizard = (): void => {
+    if (storeUser === null) {
+      return;
+    }
+    setWizardOpen(true);
+  };
+
   const closeWizard = (): void => {
     setWizardOpen(false);
     if (initialConfigure) {
@@ -932,9 +941,7 @@ export function LibraryScreen({
               size="lg"
               icon={<IconAdjustmentsHorizontal size={18} />}
               disabled={runBusy}
-              onClick={() => {
-                setWizardOpen(true);
-              }}
+              onClick={openWizard}
             >
               配置第一份课件
             </Button>
@@ -1119,9 +1126,7 @@ export function LibraryScreen({
                   size="sm"
                   icon={<IconAdjustmentsHorizontal size={15} />}
                   disabled={runBusy}
-                  onClick={() => {
-                    setWizardOpen(true);
-                  }}
+                  onClick={openWizard}
                 >
                   新增课件
                 </Button>

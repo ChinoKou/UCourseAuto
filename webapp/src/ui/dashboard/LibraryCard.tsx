@@ -102,6 +102,9 @@ export function LibraryCard({
   };
 
   const handlePrune = async (): Promise<void> => {
+    if (storeUser === null) {
+      return;
+    }
     if (site === null) {
       toast.push({ title: "站点配置缺失", tone: "error" });
       return;

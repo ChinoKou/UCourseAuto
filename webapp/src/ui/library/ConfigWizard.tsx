@@ -33,6 +33,7 @@ import { Button } from "@/ui/common/Button";
 import { Modal } from "@/ui/common/Dialog";
 import { ErrorOverlay } from "@/ui/common/ErrorOverlay";
 import { ConfigTree } from "@/ui/library/ConfigTree";
+import { acquireWakeLock, releaseWakeLock } from "@/ui/common/wakeLock";
 
 export interface ConfigWizardProps {
   /** 配置进行中时不允许关闭, 调用方据此保持弹窗打开 */
@@ -72,6 +73,13 @@ export function ConfigWizard({ onClose, site, token }: ConfigWizardProps) {
   const [configError, setConfigError] = useState<AppErrorDetail | null>(null);
   const [configuredCourses, setConfiguredCourses] = useState<ModelCourse[] | null>(null);
   const [selectedGroups, setSelectedGroups] = useState<CourseTextbookGroup[]>([]);
+
+  useEffect(() => {
+    return () => {
+      releaseWakeLock("wizard-textbooks");
+      releaseWakeLock("wizard-configure");
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -144,6 +152,7 @@ export function ConfigWizard({ onClose, site, token }: ConfigWizardProps) {
     if (selected.length === 0) {
       return;
     }
+    acquireWakeLock("wizard-textbooks");
     setStep(1);
     setTextbookLoading(true);
     setTextbookError(null);
@@ -171,6 +180,7 @@ export function ConfigWizard({ onClose, site, token }: ConfigWizardProps) {
       setSelectedTextbooks(initialSelected);
     } finally {
       setTextbookLoading(false);
+      releaseWakeLock("wizard-textbooks");
     }
   };
 
@@ -225,6 +235,7 @@ export function ConfigWizard({ onClose, site, token }: ConfigWizardProps) {
     const currentSkippedChapters = overrideSkippedChapters ?? skippedChapterIds;
     const currentSkippedTextbooks = overrideSkippedTextbooks ?? skippedTextbookIds;
 
+    acquireWakeLock("wizard-configure");
     setStep(2);
     setConfiguring(true);
     setConfigError(null);
@@ -280,6 +291,7 @@ export function ConfigWizard({ onClose, site, token }: ConfigWizardProps) {
       setErrorHeadline("课件同步异常中断");
     } finally {
       setConfiguring(false);
+      releaseWakeLock("wizard-configure");
     }
   };
 

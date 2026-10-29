@@ -40,6 +40,9 @@ export function DashboardScreen({ previewUser }: DashboardScreenProps = {}) {
   const site = findSite(activeUser.site, customSites);
 
   const openWizard = (): void => {
+    if (storeUser === null) {
+      return;
+    }
     if (site === null) {
       toast.push({ title: "站点配置缺失", tone: "error" });
       return;
