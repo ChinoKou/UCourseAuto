@@ -4,10 +4,7 @@
 
 ## 关于
 
-UCourseAuto 通过仓库内实现的协议客户端自动完成 优学院 平台的课件任务，提供网页与命令行版本两种运行形态。
-
-- **网页版（在线运行）**：纯静态前端应用，部署于 Cloudflare Pages。所有网络请求由浏览器直接发送至 优学院 平台，无任何服务端参与，无需配置开发环境即可使用。
-- **命令行版本（本地运行）**：基于 Python 编写的终端交互工具，提供独立二进制可执行文件，亦支持源码运行。
+UCourseAuto 是一个用于自动完成 优学院 平台课件的自动化协议客户端
 
 ## 功能特性
 
@@ -15,7 +12,7 @@ UCourseAuto 通过仓库内实现的协议客户端自动完成 优学院 平台
 - 答题（自动查询答案并提交）
 - 文档阅读模拟
 - 纯文本页面完成
-- 自定义学习时长（针对视频、文档、题目分别设定时长与随机浮动）
+- 自定义学习时长（针对文档、题目等类型分别设定时长与随机浮动）
 - 自定义小节冷却间隔
 - 多账号管理与快捷切换
 - 反刷课检测（实验性功能）
@@ -28,20 +25,18 @@ UCourseAuto 通过仓库内实现的协议客户端自动完成 优学院 平台
 
 ### 一、网页版
 
-#### 1、在线使用
+部署于 Cloudflare Pages 的纯静态前端应用。所有网络请求由浏览器直接发送至 优学院 平台，无任何服务端参与，无需配置开发环境。
 
-- https://ucourseauto.chinokou.me 
-- https://uca.chinokou.me 
+用现代浏览器访问以下任一站点即可进入工作台：
+
+- https://ucourseauto.chinokou.me
+- https://uca.chinokou.me
 - https://ucourseauto.pages.dev
-
-使用现代浏览器访问以上任意站点即可直接进入工作台。
-
-#### 2、本地开发与构建
 
 <details>
 <summary>本地开发与构建</summary>
 
-如需在本地运行网页版前端，推荐使用 [Bun](https://bun.sh/)：
+推荐使用 [Bun](https://bun.sh/)：
 
 ```bash
 # 进入 webapp 子项目目录
@@ -63,11 +58,7 @@ bun run build
 
 ### 二、命令行版本
 
-#### 1、二进制运行
-
-前往 [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) 页面下载最新的可执行文件，无需配置 Python 环境，下载后直接运行。
-
-#### 2、源码运行
+基于 Python 编写的终端交互工具。前往 [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) 页面下载最新的可执行文件，无需配置 Python 环境，下载后直接运行。
 
 <details>
 <summary>源码运行</summary>

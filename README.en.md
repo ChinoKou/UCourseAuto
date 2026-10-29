@@ -4,10 +4,7 @@ English | [简体中文](README.md)
 
 ## About
 
-UCourseAuto automates courseware tasks on the ULearning platform through a protocol client implemented in this repository, available as both a web and a command-line version.
-
-- **Web Version (Online)**: A pure static client-side web application deployed on Cloudflare Pages. All network requests are sent directly from your browser to the ULearning platform with no backend server involved, eliminating the need to set up local environments.
-- **CLI Version (Local)**: A terminal-based interactive utility written in Python, distributed as standalone binary executables or runnable directly from source code.
+UCourseAuto is an automated protocol client for completing courseware on the ULearning platform.
 
 ## Features
 
@@ -15,7 +12,7 @@ UCourseAuto automates courseware tasks on the ULearning platform through a proto
 - Quiz answering (automatic solution lookup and submission)
 - Document reading simulation
 - Plain text page completion
-- Customizable study durations (independent duration and random jitter for video, document, and question types)
+- Customizable study durations (independent duration and random jitter per type, such as documents and questions)
 - Configurable cooling intervals between sections
 - Multi-account management with fast switching
 - Anti-detection mode (experimental)
@@ -28,20 +25,18 @@ About the main site: the maintainer has no main-site data available for debuggin
 
 ### 1. Web Version
 
-#### 1.1 Online Access
+A pure static frontend application deployed on Cloudflare Pages. All network requests are sent directly from your browser to the ULearning platform, with no backend server involved and no development environment required.
+
+Open any of the following sites in a modern browser to enter the workbench:
 
 - https://ucourseauto.chinokou.me
 - https://uca.chinokou.me
 - https://ucourseauto.pages.dev
 
-Access any of the sites above in any modern web browser to enter the workbench directly.
-
-#### 1.2 Local Development and Build
-
 <details>
 <summary>Local Development and Build</summary>
 
-To run the web version locally, [Bun](https://bun.sh/) is recommended:
+[Bun](https://bun.sh/) is recommended:
 
 ```bash
 # Enter the webapp subproject directory
@@ -63,11 +58,7 @@ Production assets are generated in the `webapp/dist/` directory.
 
 ### 2. CLI Version
 
-#### 2.1 Run from Binary
-
-Download the latest executable from the [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) page and run it directly — no Python environment required.
-
-#### 2.2 Run from Source
+A terminal-based interactive utility written in Python. Download the latest executable from the [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) page and run it directly — no Python environment required.
 
 <details>
 <summary>Run from Source</summary>
