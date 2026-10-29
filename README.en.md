@@ -2,42 +2,32 @@
 
 English | [简体中文](README.md)
 
-## What is UCourseAuto?
+## About
 
-UCourseAuto automates courseware tasks on the ULearning platform through a protocol client implemented in this repository, available as both a web app and a command-line tool.
+UCourseAuto automates courseware tasks on the ULearning platform through a protocol client implemented in this repository, available as both a web and a command-line version.
 
 - **Web Version (Online)**: A pure static client-side web application deployed on Cloudflare Pages. All network requests are sent directly from your browser to the ULearning platform with no backend server involved, eliminating the need to set up local environments.
 - **CLI Version (Local)**: A terminal-based interactive utility written in Python, distributed as standalone binary executables or runnable directly from source code.
 
-## Repository Structure
-
-The repository is organized into two subprojects:
-
-- `webapp/` — Static web application subproject built with React 19, TypeScript, Vite 8, and Bun.
-- `cli/` — Command-line tool subproject developed in Python 3.12+ with its own uv configuration.
-
 ## Features
 
-- Video playback simulation with heartbeat reporting
-- Automated quiz answering with solution lookup and submission
-- Document and rich text reading simulation
+- Video playback (automatically simulating viewing progress and heartbeat behavior)
+- Quiz answering (automatic solution lookup and submission)
+- Document reading simulation
 - Plain text page completion
-- Customizable study durations (supporting duration ranges and randomized intervals per content type)
+- Customizable study durations (independent duration and random jitter for video, document, and question types)
 - Configurable cooling intervals between sections
-- Anti-detection mode (optional, disabled by default, see details below)
 - Multi-account management with fast switching
 - Five-level courseware tree visual configuration (Course, Textbook, Chapter, Section, Page), supporting hierarchical selection and row-level removal
+- Supported sites: ULearning Main Site https://www.ulearning.cn, Dongguan University of Technology https://lms.dgut.edu.cn
 
-## Support Sites
-
-- ULearning Main Site https://www.ulearning.cn (the maintainer has no main-site data available for debugging, so main-site availability cannot be continuously verified — PRs are welcome)
-- Dongguan University of Technology https://lms.dgut.edu.cn
+About the main site: the maintainer has no main-site data available for debugging, so main-site availability cannot be continuously verified — PRs are welcome
 
 ## Usage
 
-### Web Version
+### 1. Web Version
 
-#### Online Access
+#### 1.1 Online Access
 
 - https://ucourseauto.chinokou.me
 - https://uca.chinokou.me
@@ -45,12 +35,15 @@ The repository is organized into two subprojects:
 
 Access any of the sites above in any modern web browser to enter the workbench directly.
 
-#### Local Development and Build
+#### 1.2 Local Development and Build
+
+<details>
+<summary>Local Development and Build</summary>
 
 To run the web version locally, [Bun](https://bun.sh/) is recommended:
 
 ```bash
-# Enter the webapp directory
+# Enter the webapp subproject directory
 cd webapp
 
 # Install dependencies
@@ -65,13 +58,18 @@ bun run build
 
 Production assets are generated in the `webapp/dist/` directory.
 
-### CLI Version
+</details>
 
-#### Run from Binary
+### 2. CLI Version
+
+#### 2.1 Run from Binary
 
 Download the latest executable from the [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) page and run it directly — no Python environment required.
 
-#### Run from Source
+#### 2.2 Run from Source
+
+<details>
+<summary>Run from Source</summary>
 
 [uv](https://docs.astral.sh/uv/) is recommended for managing the Python environment and dependencies:
 
@@ -118,6 +116,15 @@ pip install -r requirements.txt
 python main.py
 ```
 
+</details>
+
+## Repository Structure
+
+The repository is organized into two subprojects:
+
+- `webapp/` — Static web application subproject built with React 19, TypeScript, Vite 8, and Bun.
+- `cli/` — Command-line tool subproject developed in Python 3.12+ with its own uv configuration.
+
 ## Configuration and Storage
 
 - **Web Version**: All data is stored in the browser's `localStorage`. Configuration is stored under `ucourse_config`. Data remains strictly in the local browser; clearing browser cache or site data resets the configuration.
@@ -128,16 +135,16 @@ python main.py
 
 ## Anti-Detection Mode (Optional, Off by Default)
 
-Enable "Anti-detection" in the settings or execution console. Once enabled, reporting for each textbook is processed in two stages:
+Enable "Anti-detection" in the courseware settings or the execution console. Once enabled, reporting for each textbook is processed in two stages:
 
-1. Stage 1: Report all pages with a study time of 0. Based on observation, querying a newly completed textbook triggers the platform's information endpoint, which initiates server-side courseware detection. Reporting 0 duration at this stage attempts to short-circuit the detection routine.
+1. Stage 1: Report all pages with a study time of 0. Based on observation of platform frontend behavior, querying a newly completed textbook triggers the platform's information endpoint, which initiates courseware detection; with 0 duration recorded on the platform side at this point, the detection can be short-circuited.
 2. Stage 2: Report actual study time. After completion is marked by the platform, actual study durations are submitted.
 
 Notes:
 
-- This feature is based on observation of platform frontend behavior; platform updates may alter effectiveness at any time.
+- This feature is based on observation of platform frontend behavior; the platform may change its behavior at any time, so long-term effectiveness is not guaranteed.
 - If a network failure occurs during the first stage and retries are exhausted, study records for reported sections may be lost.
-- Interrupting the execution after the first stage leaves the courseware completed with 0 duration, which can be identified during manual inspection.
+- Interrupting the task after the first stage is complete leaves the courseware completed with 0 study duration, which is easy to identify during manual inspection.
 
 ## How It Works (CLI Version)
 
