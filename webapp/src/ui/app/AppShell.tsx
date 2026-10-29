@@ -3,7 +3,9 @@ import {
   IconBooks,
   IconBrandGithub,
   IconChevronDown,
+  IconHome,
   IconLayoutDashboard,
+  IconLogin,
   IconPlayerPlay,
   IconX,
 } from "@tabler/icons-react";
@@ -19,23 +21,30 @@ import { useRunStore } from "@/state/runStore";
 import { navigate, useRoute } from "@/ui/app/routes";
 import { AccountDrawer } from "@/ui/account/AccountDrawer";
 import { Avatar } from "@/ui/common/Avatar";
+import { AuthGateOverlay } from "@/ui/common/AuthGateOverlay";
+import { Button } from "@/ui/common/Button";
 import { Brand } from "@/ui/common/Logo";
+import { PREVIEW_USER } from "@/ui/common/previewData";
 import { DashboardScreen } from "@/ui/dashboard/DashboardScreen";
+import { HomeScreen } from "@/ui/home/HomeScreen";
 import { LibraryScreen } from "@/ui/library/LibraryScreen";
 import { pageTransition } from "@/ui/motion/presets";
 import { ThemeToggle } from "@/ui/theme/ThemeToggle";
 
 export interface AppShellProps {
-  onAddAccount: () => void;
+  onAddAccount?: () => void;
+  onLogin?: () => void;
 }
 
 const ROUTE_TITLES = {
-  home: "工作台",
+  home: "首页",
+  dashboard: "工作台",
   library: "课件库",
 } as const;
 
 const NAV_ITEMS = [
-  { route: "home", label: "工作台", Icon: IconLayoutDashboard },
+  { route: "home", label: "首页", Icon: IconHome },
+  { route: "dashboard", label: "工作台", Icon: IconLayoutDashboard },
   { route: "library", label: "课件库", Icon: IconBooks },
 ] as const;
 
@@ -79,7 +88,7 @@ const useWakeLock = (active: boolean): void => {
 };
 
 /** 应用外壳: 顶栏、账号入口、路由切换与运行提示 */
-export function AppShell({ onAddAccount }: AppShellProps) {
+export function AppShell({ onAddAccount, onLogin }: AppShellProps) {
   const { route, configure } = useRoute();
   const activeUser = useConfigStore(selectActiveUser);
   const customSites = useConfigStore((state) => state.config.custom_sites);
@@ -110,28 +119,74 @@ export function AppShell({ onAddAccount }: AppShellProps) {
     };
   }, [runBusy, setBackgrounded]);
 
-  if (activeUser === null) {
-    throw new Error("应用外壳需要活跃账号");
-  }
-
-  const site = findSite(activeUser.site, customSites);
-  const displayName = activeUser.name !== "" ? activeUser.name : activeUser.username;
-  const summary = summarizeCourseware(activeUser.courses);
+  const site =
+    activeUser !== null ? findSite(activeUser.site, customSites) : null;
+  const displayName =
+    activeUser !== null
+      ? activeUser.name !== ""
+        ? activeUser.name
+        : activeUser.username
+      : "";
+  const summary =
+    activeUser !== null ? summarizeCourseware(activeUser.courses) : null;
   const percent =
-    summary.pageCount === 0
+    summary === null || summary.pageCount === 0
       ? 0
       : Math.round((summary.completedPages / summary.pageCount) * 100);
 
   const renderRoute = () => {
     switch (route) {
       case "home":
-        return <DashboardScreen />;
-      case "library":
         return (
-          <LibraryScreen
-            key={`${accountKeyOf(activeUser.site, activeUser.username)}:${activeUser.site}`}
-            initialConfigure={configure}
+          <HomeScreen
+            onGoDashboard={() => {
+              navigate("dashboard");
+            }}
+            onGoLibrary={() => {
+              navigate("library");
+            }}
           />
+        );
+      case "dashboard":
+        if (activeUser !== null) {
+          return <DashboardScreen />;
+        }
+        return (
+          <div className="uc-gate-wrapper">
+            <DashboardScreen previewUser={PREVIEW_USER} />
+            <AuthGateOverlay
+              title="登录以使用工作台"
+              description="工作台需要使用您的优学院账号凭证加载课件与执行推进。账号数据保存在当前浏览器的本地存储中。"
+              onLogin={() => {
+                onLogin?.();
+              }}
+            />
+          </div>
+        );
+      case "library":
+        if (activeUser !== null) {
+          return (
+            <LibraryScreen
+              key={`${accountKeyOf(activeUser.site, activeUser.username)}:${activeUser.site}`}
+              initialConfigure={configure}
+            />
+          );
+        }
+        return (
+          <div className="uc-gate-wrapper">
+            <LibraryScreen
+              key="guest_preview_library"
+              initialConfigure={false}
+              previewUser={PREVIEW_USER}
+            />
+            <AuthGateOverlay
+              title="登录以查看课件库"
+              description="课件库需要使用您的优学院账号凭证拉取课程结构与学习进度。账号数据保存在当前浏览器的本地存储中。"
+              onLogin={() => {
+                onLogin?.();
+              }}
+            />
+          </div>
         );
     }
   };
@@ -144,7 +199,7 @@ export function AppShell({ onAddAccount }: AppShellProps) {
             <button
               type="button"
               className="uc-topbar__brand"
-              aria-label="回到工作台"
+              aria-label="回到首页"
               onClick={() => {
                 navigate("home");
               }}
@@ -186,13 +241,13 @@ export function AppShell({ onAddAccount }: AppShellProps) {
                 type="button"
                 className="uc-running-pill"
                 onClick={() => {
-                  if (route === "home") {
+                  if (route === "dashboard") {
                     document
                       .getElementById("run-console")
                       ?.scrollIntoView({ behavior: "smooth", block: "center" });
                     return;
                   }
-                  navigate("home");
+                  navigate("dashboard");
                 }}
               >
                 <span className="uc-running-pill__dot" />
@@ -202,23 +257,34 @@ export function AppShell({ onAddAccount }: AppShellProps) {
               </button>
             )}
             <ThemeToggle />
-            <button
-              type="button"
-              className="uc-account-chip"
-              aria-label="账号管理"
-              onClick={() => {
-                setAccountOpen(true);
-              }}
-            >
-              <Avatar name={displayName} url={activeUser.headimage} size={32} />
-              <span className="uc-account-chip__text">
-                <span className="uc-account-chip__name">{displayName}</span>
-                <span className="uc-account-chip__site">
-                  {site?.name ?? "站点已移除"}
+            {activeUser !== null ? (
+              <button
+                type="button"
+                className="uc-account-chip"
+                aria-label="账号管理"
+                onClick={() => {
+                  setAccountOpen(true);
+                }}
+              >
+                <Avatar name={displayName} url={activeUser.headimage} size={32} />
+                <span className="uc-account-chip__text">
+                  <span className="uc-account-chip__name">{displayName}</span>
+                  <span className="uc-account-chip__site">
+                    {site?.name ?? "站点已移除"}
+                  </span>
                 </span>
-              </span>
-              <IconChevronDown size={15} className="uc-account-chip__chevron" />
-            </button>
+                <IconChevronDown size={15} className="uc-account-chip__chevron" />
+              </button>
+            ) : (
+              <Button
+                variant="primary"
+                size="sm"
+                icon={<IconLogin size={15} />}
+                onClick={onLogin}
+              >
+                登录
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -268,7 +334,7 @@ export function AppShell({ onAddAccount }: AppShellProps) {
         }}
         onAddAccount={() => {
           setAccountOpen(false);
-          onAddAccount();
+          onAddAccount?.();
         }}
         runBusy={runBusy}
       />

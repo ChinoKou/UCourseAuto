@@ -4,13 +4,12 @@ import { useEffect, useRef, useState } from "react";
 
 import { findSite } from "@/schema/domain/site";
 import { accountKeyOf } from "@/schema/domain/config";
-import { selectActiveUser, useConfigStore } from "@/state/configStore";
+import { useConfigStore } from "@/state/configStore";
 import { restoreSession } from "@/usecases/signIn";
 import { AppShell } from "@/ui/app/AppShell";
 import { BootScreen } from "@/ui/app/BootScreen";
 import { usePorts } from "@/ui/app/ports";
 import { endSessionForRestore } from "@/ui/app/restoreState";
-import { navigate } from "@/ui/app/routes";
 import { AuthScreen } from "@/ui/auth/AuthScreen";
 import { Button } from "@/ui/common/Button";
 import { useToast } from "@/ui/common/toast";
@@ -23,7 +22,6 @@ const APP_START_TIME = Date.now();
 
 /** 应用根: 启动加载、登录态恢复与整屏切换 */
 export function AppRoot() {
-  const activeUser = useConfigStore(selectActiveUser);
   const loadError = useConfigStore((state) => state.loadError);
   const resetConfig = useConfigStore((state) => state.resetConfig);
   const toast = useToast();
@@ -35,7 +33,8 @@ export function AppRoot() {
   const [restoreDone, setRestoreDone] = useState(false);
   const [restoreError, setRestoreError] = useState<string | null>(null);
   const [restoreBlocked, setRestoreBlocked] = useState(false);
-  const [addingAccount, setAddingAccount] = useState(false);
+  const [authScreenOpen, setAuthScreenOpen] = useState(false);
+  const [authScreenMode, setAuthScreenMode] = useState<"login" | "add">("login");
   const startedRef = useRef(false);
 
   useEffect(() => {
@@ -154,7 +153,15 @@ export function AppRoot() {
     };
   }, [resourcesReady, booting]);
 
-  const showShell = activeUser !== null && !addingAccount && !restoreBlocked;
+  useEffect(() => {
+    if (restoreDone && restoreError !== null && !restoreBlocked) {
+      toast.push({
+        title: "自动登录没有完成",
+        description: restoreError,
+        tone: "warning",
+      });
+    }
+  }, [restoreDone, restoreError, restoreBlocked, toast]);
 
   return (
     <>
@@ -221,24 +228,24 @@ export function AppRoot() {
 
       {!booting &&
         !restoreBlocked &&
-        (showShell ? (
-          <AppShell
-            onAddAccount={() => {
-              setAddingAccount(true);
+        (authScreenOpen ? (
+          <AuthScreen
+            mode={authScreenMode}
+            restoreError={restoreError}
+            onBack={() => {
+              setAuthScreenOpen(false);
             }}
           />
         ) : (
-          <AuthScreen
-            mode={addingAccount ? "add" : "login"}
-            restoreError={restoreError}
-            onBack={
-              addingAccount
-                ? () => {
-                    setAddingAccount(false);
-                    navigate("home");
-                  }
-                : undefined
-            }
+          <AppShell
+            onLogin={() => {
+              setAuthScreenMode("login");
+              setAuthScreenOpen(true);
+            }}
+            onAddAccount={() => {
+              setAuthScreenMode("add");
+              setAuthScreenOpen(true);
+            }}
           />
         ))}
     </>

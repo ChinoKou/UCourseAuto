@@ -142,7 +142,7 @@ export function AuthScreen({ mode, onBack, restoreError }: AuthScreenProps) {
       }
       saveIdentity(accountKey, result.data.identity);
       toast.push({ title: `欢迎回来，${result.data.identity.name}`, tone: "success" });
-      navigate("home");
+      navigate("dashboard");
       onBack?.();
     } finally {
       if (mountedRef.current) {
@@ -212,7 +212,7 @@ export function AuthScreen({ mode, onBack, restoreError }: AuthScreenProps) {
       }
       saveIdentity(accountKey, result.data.identity);
       toast.push({ title: `已切换到 ${user.username}`, tone: "success" });
-      navigate("home");
+      navigate("dashboard");
       onBack?.();
     } finally {
       if (mountedRef.current) {
@@ -231,15 +231,20 @@ export function AuthScreen({ mode, onBack, restoreError }: AuthScreenProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       >
-        {isAdd && onBack !== undefined && (
+        {onBack !== undefined && (
           <button
             type="button"
             className="uc-auth__back"
             disabled={busy}
-            onClick={onBack}
+            onClick={() => {
+              if (!isAdd) {
+                navigate("home");
+              }
+              onBack();
+            }}
           >
             <IconArrowLeft size={15} />
-            <span>返回工作台</span>
+            <span>{isAdd ? "返回工作台" : "返回首页"}</span>
           </button>
         )}
 

@@ -16,9 +16,11 @@
 @import "./overlays/dialog.css";
 @import "./overlays/toast.css";
 @import "./overlays/error-panel.css";
+@import "./overlays/auth-gate.css";
 @import "./features/server/server.css";
 @import "./features/auth/auth.css";
 @import "./features/account/account.css";
+@import "./features/home/home-intro.css";
 @import "./features/dashboard/home.css";
 @import "./features/dashboard/run-console.css";
 @import "./features/dashboard/run-console-live.css";

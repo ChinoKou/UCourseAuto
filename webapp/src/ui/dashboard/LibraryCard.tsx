@@ -5,6 +5,7 @@ import { VList, type VListHandle } from "virtua";
 import { summarizeCourseware } from "@/logic/courseware/statistics";
 import { cloneCourses, collectPageIds } from "@/logic/courseware/tree";
 import type { AppErrorDetail } from "@/error/report";
+import type { UserConfig } from "@/schema/domain/config";
 import { findSite } from "@/schema/domain/site";
 import { selectActiveUser, useConfigStore } from "@/state/configStore";
 import { useRunStore } from "@/state/runStore";
@@ -23,6 +24,7 @@ import { buildLibraryTree } from "@/ui/dashboard/libraryTree";
 export interface LibraryCardProps {
   onConfigure: () => void;
   highlighted?: boolean;
+  previewUser?: UserConfig;
   ref?: React.Ref<HTMLElement>;
 }
 
@@ -30,9 +32,11 @@ export interface LibraryCardProps {
 export function LibraryCard({
   onConfigure,
   highlighted = false,
+  previewUser,
   ref,
 }: LibraryCardProps) {
-  const activeUser = useConfigStore(selectActiveUser);
+  const storeUser = useConfigStore(selectActiveUser);
+  const activeUser = storeUser ?? previewUser ?? null;
   const customSites = useConfigStore((state) => state.config.custom_sites);
   const replaceCourseware = useConfigStore((state) => state.replaceCourseware);
   const phase = useRunStore((state) => state.phase);
@@ -43,14 +47,25 @@ export function LibraryCard({
   const clearSelectedPages = useRunStore((state) => state.clearSelectedPages);
   const ports = usePorts();
   const toast = useToast();
-  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(
-    () => new Set(),
-  );
+  const courses = activeUser?.courses;
+  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(() => {
+    const initial = new Set<string>();
+    if (courses && courses.length > 0) {
+      for (const course of courses) {
+        for (const tb of course.textbooks) {
+          initial.add(`t${course.course_id}-${tb.textbook_id}`);
+          for (const ch of tb.chapters) {
+            initial.add(`h${ch.chapter_id}`);
+          }
+        }
+      }
+    }
+    return initial;
+  });
   const [pruneOpen, setPruneOpen] = useState(false);
   const [pruning, setPruning] = useState(false);
   const [pruneError, setPruneError] = useState<AppErrorDetail | null>(null);
   const listRef = useRef<VListHandle>(null);
-  const courses = activeUser?.courses;
 
   const tree = useMemo(
     () => buildLibraryTree(courses ?? [], progress, expandedNodes, selectedPageIds),

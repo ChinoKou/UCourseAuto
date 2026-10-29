@@ -30,6 +30,7 @@ import {
   type CoursewareTarget,
 } from "@/logic/courseware/tree";
 import type { ModelCourse, ModelTextbook } from "@/schema/domain/course";
+import type { UserConfig } from "@/schema/domain/config";
 import type {
   CoursewareChapter,
   CoursewarePage,
@@ -52,6 +53,7 @@ import { ConfigWizard } from "@/ui/library/ConfigWizard";
 
 export interface LibraryScreenProps {
   initialConfigure: boolean;
+  previewUser?: UserConfig;
 }
 
 const EMPTY_COURSES: ModelCourse[] = [];
@@ -331,8 +333,12 @@ const targetSummary = (target: CoursewareTarget, count: number): string => {
 };
 
 /** 课件库一级工作台页面: 双栏导航联动、五层深度树编辑、状态同步与批量管理 */
-export function LibraryScreen({ initialConfigure }: LibraryScreenProps) {
-  const activeUser = useConfigStore(selectActiveUser);
+export function LibraryScreen({
+  initialConfigure,
+  previewUser,
+}: LibraryScreenProps) {
+  const storeUser = useConfigStore(selectActiveUser);
+  const activeUser = storeUser ?? previewUser ?? null;
   const customSites = useConfigStore((state) => state.config.custom_sites);
   const replaceCourseware = useConfigStore((state) => state.replaceCourseware);
   const removePages = useConfigStore((state) => state.removePages);
@@ -650,6 +656,9 @@ export function LibraryScreen({ initialConfigure }: LibraryScreenProps) {
   };
 
   const handlePrune = async (): Promise<void> => {
+    if (storeUser === null) {
+      return;
+    }
     if (site === null) {
       toast.push({ title: "站点配置缺失", tone: "error" });
       return;
@@ -698,7 +707,7 @@ export function LibraryScreen({ initialConfigure }: LibraryScreenProps) {
   };
 
   const handleDeleteSelected = (): void => {
-    if (runBusy) {
+    if (runBusy || storeUser === null) {
       return;
     }
     const pageIds = [...selectedPages];
@@ -713,7 +722,7 @@ export function LibraryScreen({ initialConfigure }: LibraryScreenProps) {
   };
 
   const handleDeleteTarget = (): void => {
-    if (deleteTarget === null || runBusy) {
+    if (deleteTarget === null || runBusy || storeUser === null) {
       return;
     }
     const pageIds = pageIdsForTarget(courses, deleteTarget.target);

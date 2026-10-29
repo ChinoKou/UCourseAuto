@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 
 import { createErrorDetail, type AppErrorDetail } from "@/error/report";
 import { summarizeCourseware } from "@/logic/courseware/statistics";
+import type { UserConfig } from "@/schema/domain/config";
 import { selectActiveUser, useConfigStore } from "@/state/configStore";
 import { useRunStore } from "@/state/runStore";
 import { AnimatedNumber } from "@/ui/common/AnimatedNumber";
@@ -27,11 +28,17 @@ import { useRunControl } from "@/ui/run/useRunControl";
 export interface RunConsoleProps {
   onConfigure: () => void;
   onRequireSelection?: () => void;
+  previewUser?: UserConfig;
 }
 
 /** 首页刷课卡: 直接启动、卡内运行动画、参数配置与停止控制 */
-export function RunConsole({ onConfigure, onRequireSelection }: RunConsoleProps) {
-  const activeUser = useConfigStore(selectActiveUser);
+export function RunConsole({
+  onConfigure,
+  onRequireSelection,
+  previewUser,
+}: RunConsoleProps) {
+  const storeUser = useConfigStore(selectActiveUser);
+  const activeUser = storeUser ?? previewUser ?? null;
   const phase = useRunStore((state) => state.phase);
   const progress = useRunStore((state) => state.progress);
   const antiStage = useRunStore((state) => state.antiDetectionStage);
@@ -72,7 +79,7 @@ export function RunConsole({ onConfigure, onRequireSelection }: RunConsoleProps)
   const isPartial = !stopRequested && (hasUnfinishedTargets || hasSkippedSections);
 
   const startRun = (): void => {
-    if (!settingsValid) {
+    if (!settingsValid || storeUser === null) {
       return;
     }
     if (selectedCount === 0) {

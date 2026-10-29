@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { findSite } from "@/schema/domain/site";
+import type { UserConfig } from "@/schema/domain/config";
 import { selectActiveUser, useConfigStore } from "@/state/configStore";
 import { useToast } from "@/ui/common/toast";
 import { LibraryCard } from "@/ui/dashboard/LibraryCard";
@@ -9,9 +10,14 @@ import { ConfigWizard } from "@/ui/library/ConfigWizard";
 import { staggerContainer, staggerItem } from "@/ui/motion/presets";
 import { RunConsole } from "@/ui/run/RunConsole";
 
+export interface DashboardScreenProps {
+  previewUser?: UserConfig;
+}
+
 /** 首页工作台: 刷课卡与课件库卡并排占满内容区 */
-export function DashboardScreen() {
-  const activeUser = useConfigStore(selectActiveUser);
+export function DashboardScreen({ previewUser }: DashboardScreenProps = {}) {
+  const storeUser = useConfigStore(selectActiveUser);
+  const activeUser = storeUser ?? previewUser ?? null;
   const customSites = useConfigStore((state) => state.config.custom_sites);
   const [wizardOpen, setWizardOpen] = useState(false);
   const [libraryHighlighted, setLibraryHighlighted] = useState(false);
@@ -72,6 +78,7 @@ export function DashboardScreen() {
       >
         <motion.div className="uc-home-grid__run" variants={staggerItem}>
           <RunConsole
+            previewUser={previewUser}
             onConfigure={openWizard}
             onRequireSelection={handleRequireSelection}
           />
@@ -80,6 +87,7 @@ export function DashboardScreen() {
         <motion.div className="uc-home-grid__library" variants={staggerItem}>
           <LibraryCard
             ref={libraryRef}
+            previewUser={previewUser}
             highlighted={libraryHighlighted}
             onConfigure={openWizard}
           />

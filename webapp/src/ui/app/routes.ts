@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
+import { useConfigStore } from "@/state/configStore";
+
 /** 应用内页面 */
-export type AppRoute = "home" | "library";
+export type AppRoute = "home" | "dashboard" | "library";
 
 /** 路由状态: 页面与页面参数 */
 export interface RouteState {
@@ -10,16 +12,20 @@ export interface RouteState {
   configure: boolean;
 }
 
-const ROUTES: ReadonlyArray<AppRoute> = ["home", "library"];
+const ROUTES: ReadonlyArray<AppRoute> = ["home", "dashboard", "library"];
 
 const isAppRoute = (value: string): value is AppRoute =>
   ROUTES.some((route) => route === value);
 
 /** 读取地址栏 hash 得到路由状态 */
-const parseRoute = (): RouteState => {
-  const raw = window.location.hash.replace(/^#\/?/, "");
+export const parseRoute = (rawHash?: string): RouteState => {
+  const source =
+    rawHash ?? (typeof window !== "undefined" ? window.location.hash : "");
+  const raw = source.replace(/^#\/?/, "");
   const [path, query = ""] = raw.split("?");
-  const route = isAppRoute(path) ? path : "home";
+  const activeUser = useConfigStore.getState().config.active_user;
+  const defaultRoute: AppRoute = activeUser !== "" ? "dashboard" : "home";
+  const route = isAppRoute(path) ? path : defaultRoute;
   return {
     route,
     configure: new URLSearchParams(query).get("configure") === "1",

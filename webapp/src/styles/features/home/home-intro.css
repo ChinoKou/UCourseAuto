@@ -1,0 +1,389 @@
+/* 首页 Tab: 项目介绍、特性解析与引导入口样式 */
+
+.uc-home-intro {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  padding-bottom: 48px;
+}
+
+.uc-intro-container {
+  display: flex;
+  flex-direction: column;
+  gap: 54px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Hero 区域 */
+.uc-intro-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 42px 16px 20px;
+}
+
+.uc-intro-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 22px;
+  padding: 6px 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 12px -2px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.uc-intro-hero__title {
+  margin: 0 0 18px;
+  font-size: clamp(34px, 5.2vw, 58px);
+  font-weight: 780;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.uc-intro-hero__title span {
+  display: inline-block;
+  padding-right: 0.16em;
+  margin-right: -0.12em;
+  background: linear-gradient(
+    135deg,
+    var(--accent) 0%,
+    color-mix(in srgb, var(--accent-2) 80%, var(--warm)) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.uc-intro-hero__desc {
+  max-width: 680px;
+  margin: 0 auto 32px;
+  font-size: clamp(14px, 1.8vw, 16.5px);
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+.uc-intro-hero__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 四个核心亮点卡片横排 */
+.uc-intro-pillars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.uc-intro-pillar-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.2s var(--ease-out),
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.uc-intro-pillar-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+  background: var(--surface-solid);
+}
+
+.uc-intro-pillar-card__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
+  border-radius: 13px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.uc-intro-pillar-card__content h3 {
+  margin: 0 0 6px;
+  font-size: 15.5px;
+  font-weight: 720;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.uc-intro-pillar-card__content p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+/* 章节头部 */
+.uc-intro-section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.uc-intro-section-head h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(24px, 3.2vw, 32px);
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.uc-intro-section-head p {
+  max-width: 560px;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+/* 核心特性深度网格 */
+.uc-intro-features {
+  width: 100%;
+}
+
+.uc-intro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.uc-intro-card {
+  padding: 28px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.2s var(--ease-out),
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.uc-intro-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+  background: var(--surface-solid);
+}
+
+.uc-intro-card__icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.uc-intro-card__icon--accent {
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.uc-intro-card__icon--warm {
+  border: 1px solid color-mix(in srgb, var(--warm) 30%, transparent);
+  background: var(--warm-soft);
+  color: var(--warm);
+}
+
+.uc-intro-card__icon--success {
+  border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.uc-intro-card__icon--info {
+  border: 1px solid color-mix(in srgb, var(--info) 30%, transparent);
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.uc-intro-card h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 720;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.uc-intro-card p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* 三步流程指引 */
+.uc-intro-steps {
+  width: 100%;
+}
+
+.uc-intro-steps__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.uc-intro-step-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.uc-intro-step-item__number {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  font-family: var(--font-mono);
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 1;
+  color: color-mix(in srgb, var(--ink) 9%, transparent);
+  pointer-events: none;
+}
+
+.uc-intro-step-item h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 720;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.uc-intro-step-item p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* 底部行动召唤横幅 */
+.uc-intro-cta {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.uc-intro-cta__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 36px 38px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: var(--radius-xl);
+  background: radial-gradient(
+      ellipse at 90% 20%,
+      color-mix(in srgb, var(--accent) 15%, transparent),
+      transparent 70%
+    ),
+    var(--surface-solid);
+  box-shadow: var(--shadow-md);
+}
+
+.uc-intro-cta__content h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.uc-intro-cta__content p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+.uc-intro-cta__actions {
+  flex: none;
+}
+
+/* 响应式断点适配 */
+@media (max-width: 1050px) {
+  .uc-intro-pillars {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 950px) {
+  .uc-intro-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .uc-intro-container {
+    gap: 40px;
+  }
+
+  .uc-intro-steps__list {
+    grid-template-columns: 1fr;
+  }
+
+  .uc-intro-cta__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 28px 24px;
+  }
+
+  .uc-intro-cta__actions {
+    width: 100%;
+  }
+
+  .uc-intro-cta__actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 580px) {
+  .uc-intro-pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .uc-intro-hero {
+    padding: 24px 8px 12px;
+  }
+
+  .uc-intro-hero__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .uc-intro-hero__actions button,
+  .uc-intro-hero__actions a {
+    width: 100%;
+    justify-content: center;
+  }
+}
