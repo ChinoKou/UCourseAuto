@@ -4,22 +4,29 @@
 
 ## UCourseAuto 是什么？
 
-UCourseAuto 是一个用于自动完成 优学院 平台课件的命令行自动化工具。
+UCourseAuto 是一个用于自动完成 优学院 平台课件的自动化工具，提供网页版与命令行版本两种运行形态。
+
+- **网页版（在线运行）**：纯静态前端应用，部署于 Cloudflare Pages。所有网络请求由浏览器直接发送至 优学院 平台，无任何服务端参与，无需配置开发环境即可使用。
+- **命令行版本（本地运行）**：基于 Python 编写的终端交互工具，提供独立二进制可执行文件，亦支持源码运行。
 
 ## 仓库结构
 
-命令行工具位于 `cli/` 目录，作为独立子项目自带 uv 工程配置（`pyproject.toml`、`uv.lock`、`requirements.txt`），下文的源码运行命令与数据文件说明均以 `cli/` 为根。
+仓库划分为两个子项目目录：
+
+- `webapp/` — 静态网页子项目，使用 React 19、TypeScript、Vite 8 与 Bun 构建。
+- `cli/` — 命令行工具子项目，使用 Python 3.12+ 开发，自带 uv 工程配置。
 
 ## 功能特性
 
-- 视频观看（模拟观看进度）
-- 答题（自动查询答案）
-- 文档阅读模拟
-- 纯文本页面完成
-- 自定义学习时长
-- 反刷课检测（可选，默认关闭，见下文说明）
-- 多用户支持
-- 课件配置修改
+- 视频观看（自动模拟观看进度与心跳行为）
+- 题目解答（自动查询答案并提交）
+- 文档与富文本页面阅读模拟
+- 纯文本页面自动完成
+- 自定义学习时长（支持针对视频、文档等设定独立时长与随机浮动）
+- 自定义小节冷却间隔
+- 反刷课检测机制（可选，默认关闭，详见下文说明）
+- 多账号管理与快捷切换
+- 五层课件树可视化配置（课程、教材、章、节、页面），支持多级选择与行级删除
 
 ## 支持站点
 
@@ -28,11 +35,43 @@ UCourseAuto 是一个用于自动完成 优学院 平台课件的命令行自动
 
 ## 使用方法
 
-### 二进制运行
+### 网页版
+
+#### 在线使用
+
+- https://ucourseauto.chinokou.me 
+- https://uca.chinokou.me 
+- https://ucourseauto.pages.dev
+
+使用现代浏览器访问以上任意站点即可直接进入工作台。
+
+#### 本地开发与构建
+
+如需在本地运行网页版前端，推荐使用 [Bun](https://bun.sh/)：
+
+```bash
+# 进入 webapp 子项目目录
+cd webapp
+
+# 安装依赖
+bun install
+
+# 启动本地开发服务
+bun run dev
+
+# 构建生产环境静态资源
+bun run build
+```
+
+构建生成的静态文件位于 `webapp/dist/` 目录。
+
+### 命令行版本
+
+#### 二进制运行
 
 前往 [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) 页面下载最新的可执行文件，无需配置 Python 环境，下载后直接运行。
 
-### 源码运行
+#### 源码运行
 
 推荐使用 [uv](https://docs.astral.sh/uv/) 管理 Python 环境与依赖：
 
@@ -43,7 +82,7 @@ uv sync
 uv run main.py
 ```
 
-备选启动方式：`uv run python -m src.main`
+备选启动命令：`uv run python -m src.main`
 
 <details>
 <summary>尚未安装 uv？展开查看安装命令</summary>
@@ -58,7 +97,7 @@ Windows（PowerShell）：
 
 </details>
 
-如果不使用 uv，也可以按传统方式用 pip 手动准备环境：
+如果不使用 uv，也可以按传统方式使用 pip 准备运行环境：
 
 ```bash
 # 进入 cli 子项目目录
@@ -75,31 +114,30 @@ source .venv/bin/activate
 # 安装依赖
 pip install -r requirements.txt
 
-# 激活状态下运行
+# 运行程序
 python main.py
 ```
 
-## 配置与数据文件
+## 配置与数据存储
 
-程序运行时在 `cli/ucourse_data/` 目录下生成本地数据：
-
-- `ucourse_config.json`：配置文件，JSON 明文保存。注意：账号密码以明文形式保存在该文件中，请自行妥善保管，不要将 `ucourse_data/` 目录分享给他人。
-- `ucourse_logs/`：运行日志目录。
-
-旧版本在项目根目录生成的 `ucourse_config.yaml` 会在首次运行时自动迁移为新配置（迁移后配置带版本号，旧文件会被移除），无需手动处理。
+- **网页版**：所有数据存储于浏览器的 `localStorage` 中。配置保存在 `ucourse_config`。数据仅留存于本地浏览器，清除浏览器缓存或站点数据会导致配置重置。
+- **命令行版本**：程序运行时在 `cli/ucourse_data/` 目录下生成本地数据：
+  - `ucourse_config.json`：配置文件，JSON 明文保存。账号密码以明文形式保存在该文件中，请妥善保管，切勿将 `ucourse_data/` 目录分享给他人。
+  - `ucourse_logs/`：运行日志目录。
+  旧版本在项目根目录生成的 `ucourse_config.yaml` 会在首次运行时自动迁移为新配置，旧文件会在迁移完成后移除。
 
 ## 反刷课检测（可选，默认关闭）
 
-在课件管理菜单中选择「反刷课检测」可以开启该功能。开启后，每个教材的上报分为两段：
+在课件设置或运行控制台中开启「反刷课检测」。开启后，每个教材的上报过程分为两个阶段：
 
-1. 第一段：将所有页面的学习时长以 0 上报。据观察，第一次刷完一个教材并且用户在前端查询时会触发平台的 information 接口，该接口会触发刷课检测；此时平台侧记录的学习时长为 0，可以尝试短路这次检测（该接口的客户端超时为 120 秒）。
-2. 第二段：上报真实的学习时长。系统判定完成之后，老师可能会查看学习时长，因此需要补上真实时长。
+1. 第一阶段：将所有页面的学习时长以 0 上报。根据对平台前端行为的观察，首次完成教材并且在前端查询时会触发平台的 information 接口，该接口会触发刷课检测行为；此时平台侧记录的学习时长为 0，可以尝试短路这次检测。
+2. 第二阶段：上报实际学习时长。系统判定完成之后，补全实际时长数据。
 
 注意事项：
 
-- 该功能基于对平台前端行为的观察，平台随时可能调整策略，不保证一直有效。
-- 第一段上报进行时若出现网络错误且重试耗尽，已上报节的学习进度会丢失。
-- 若第一段上报完成后中断刷课，课件将处于 0 时长但已完成的状态，容易被老师等人工排查发现。
+- 该功能基于对平台前端行为的观察，平台随时可能调整策略，无法保证长期有效。
+- 第一阶段上报进行过程中若发生网络错误且重试耗尽，已上报小节的学习进度会丢失。
+- 若第一阶段上报完成后中断任务，课件将处于学习时长为 0 且显示已完成的状态，容易被人工排查发现。
 
 ## 工作原理
 
@@ -107,17 +145,17 @@ python main.py
 sequenceDiagram
     autonumber
     actor User
-    participant Main as CLI Main
+    participant Runner as Runner (Web / CLI)
     participant CM as CourseManager
     participant DM as DataManager
     participant API as CourseAPI
     participant Server as ULearning Server
 
-    User->>Main: Select "Start Courseware"
-    Main->>CM: Invoke __start_course_ware()
+    User->>Runner: Start Courseware Task
+    Runner->>CM: Invoke Task Execution
     activate CM
 
-    Note over CM: Load UserConfig<br/>Iterate: Course -> Textbook -> Chapter -> Section
+    Note over CM: Load Configuration<br/>Iterate: Course -> Textbook -> Chapter -> Section
 
     opt Anti-detection enabled (per Textbook, off by default)
         Note over CM: First pass: sync with studyTime = 0<br/>for every page
@@ -154,7 +192,7 @@ sequenceDiagram
 
         CM->>API: sync_study_record(request_data)
         activate API
-        Note right of API: Call utils.sync_text_encrypt<br/>Encrypt payload (DES + Base64)
+        Note right of API: Encrypt payload (DES + Base64)
         API->>Server: POST /yws/api/personal/sync
         Server-->>API: Return Status "1" (Success)
         API-->>CM: Return True
@@ -163,14 +201,14 @@ sequenceDiagram
         Note over CM: Cooling down (Sleep Time)
     end
 
-    CM-->>Main: All Tasks Completed
-    Main-->>User: Show Success Message
+    CM-->>Runner: All Tasks Completed
+    Runner-->>User: Show Success State
     deactivate CM
 ```
 
 ## 使用条款
 
-使用本工具即表示你已知晓在 优学院 平台上使用自动化工具的相关风险，并接受以下条款：
+使用本工具即表示已知晓在 优学院 平台上使用自动化工具的相关风险，并接受以下条款：
 
-- 作者不保证使用本工具不会被 优学院 平台检测到
-- 因使用本工具产生的一切后果（包括但不限于纪律处分）均由用户自行承担
+- 作者不保证使用本工具不会被 优学院 平台检测到。
+- 因使用本工具产生的一切后果（包括但不限于纪律处分）均由使用者自行承担。

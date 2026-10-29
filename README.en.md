@@ -4,22 +4,29 @@ English | [简体中文](README.md)
 
 ## What is UCourseAuto?
 
-UCourseAuto is an automated CLI tool for completing courseware on the ULearning platform.
+UCourseAuto is an automation tool designed to complete courseware on the ULearning platform, available in both web and command-line interfaces.
+
+- **Web Version (Online)**: A pure static client-side web application deployed on Cloudflare Pages. All network requests are sent directly from your browser to the ULearning platform with no backend server involved, eliminating the need to set up local environments.
+- **CLI Version (Local)**: A terminal-based interactive utility written in Python, distributed as standalone binary executables or runnable directly from source code.
 
 ## Repository Structure
 
-The CLI tool lives in the `cli/` directory as a standalone subproject with its own uv project files (`pyproject.toml`, `uv.lock`, `requirements.txt`). The source-run commands and data-file notes below are relative to `cli/`.
+The repository is organized into two subprojects:
+
+- `webapp/` — Static web application subproject built with React 19, TypeScript, Vite 8, and Bun.
+- `cli/` — Command-line tool subproject developed in Python 3.12+ with its own uv configuration.
 
 ## Features
 
-- Video watching with simulated progress
-- Question answering with automatic solution lookup
-- Document reading simulation
-- Content page completion
-- Customizable study time
-- Anti-detection mode (optional, off by default, see below)
-- Multiple users support
-- Modify courseware configuration
+- Video playback simulation with heartbeat reporting
+- Automated quiz answering with solution lookup and submission
+- Document and rich text reading simulation
+- Plain text page completion
+- Customizable study durations (supporting duration ranges and randomized intervals per content type)
+- Configurable cooling intervals between sections
+- Anti-detection mode (optional, disabled by default, see details below)
+- Multi-account management with fast switching
+- Five-level courseware tree visual configuration (Course, Textbook, Chapter, Section, Page), supporting hierarchical selection and row-level removal
 
 ## Support Sites
 
@@ -28,11 +35,43 @@ The CLI tool lives in the `cli/` directory as a standalone subproject with its o
 
 ## Usage
 
-### Run from Binary
+### Web Version
 
-Download the latest executable from the [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) page and run it directly — no Python setup required.
+#### Online Access
 
-### Run from Source
+- https://ucourseauto.chinokou.me
+- https://uca.chinokou.me
+- https://ucourseauto.pages.dev
+
+Access any of the sites above in any modern web browser to enter the workbench directly.
+
+#### Local Development and Build
+
+To run the web version locally, [Bun](https://bun.sh/) is recommended:
+
+```bash
+# Enter the webapp directory
+cd webapp
+
+# Install dependencies
+bun install
+
+# Start local development server
+bun run dev
+
+# Build production assets
+bun run build
+```
+
+Production assets are generated in the `webapp/dist/` directory.
+
+### CLI Version
+
+#### Run from Binary
+
+Download the latest executable from the [Releases](https://github.com/ChinoKou/UCourseAuto/releases/latest) page and run it directly — no Python environment required.
+
+#### Run from Source
 
 [uv](https://docs.astral.sh/uv/) is recommended for managing the Python environment and dependencies:
 
@@ -58,7 +97,7 @@ Windows (PowerShell):
 
 </details>
 
-Alternatively, set up the environment the traditional way with pip:
+Alternatively, set up the environment with pip:
 
 ```bash
 # Enter the cli subproject directory
@@ -75,31 +114,30 @@ source .venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Run with the environment activated
+# Run the program
 python main.py
 ```
 
-## Configuration and Data Files
+## Configuration and Storage
 
-The program generates local data under the `cli/ucourse_data/` directory:
-
-- `ucourse_config.json`: the configuration file, stored as plain JSON. Note: the account password is stored in plain text in this file. Keep the `ucourse_data/` directory private and never share it with others.
-- `ucourse_logs/`: the runtime log directory.
-
-A legacy `ucourse_config.yaml` from previous versions (in the project root) is migrated automatically to the new configuration on first run (the migrated configuration carries a version number, and the old file is removed afterwards) — no manual action required.
+- **Web Version**: All data is stored in the browser's `localStorage`. Configuration is stored under `ucourse_config`. Data remains strictly in the local browser; clearing browser cache or site data resets the configuration.
+- **CLI Version**: Runtime data is created under the `cli/ucourse_data/` directory:
+  - `ucourse_config.json`: Configuration file stored as plain JSON. Account passwords are saved in plain text; keep the `ucourse_data/` directory private and do not share it.
+  - `ucourse_logs/`: Directory for runtime execution logs.
+  Legacy `ucourse_config.yaml` from earlier versions in the repository root is migrated automatically on first launch and removed afterwards.
 
 ## Anti-Detection Mode (Optional, Off by Default)
 
-Select "反刷课检测" in the courseware management menu to enable it. Once enabled, reporting for each textbook is split into two passes:
+Enable "Anti-detection" in the settings or execution console. Once enabled, reporting for each textbook is processed in two stages:
 
-1. First pass: all pages are reported with a study time of 0. Based on observation, after a textbook is completed for the first time, querying it in the web frontend triggers the platform's information endpoint, which triggers courseware detection. At that moment the recorded study time is 0, which can short-circuit that detection (the client-side timeout of this endpoint is 120 seconds).
-2. Second pass: the real study time is reported. After the system marks the courseware complete, teachers may check the study time, so the real duration must be filled in.
+1. Stage 1: Report all pages with a study time of 0. Based on observation, querying a newly completed textbook triggers the platform's information endpoint, which initiates server-side courseware detection. Reporting 0 duration at this stage attempts to short-circuit the detection routine.
+2. Stage 2: Report actual study time. After completion is marked by the platform, actual study durations are submitted.
 
 Notes:
 
-- This feature is based on observation of the platform's frontend behavior. The platform may change its strategy at any time, so it is not guaranteed to work.
-- If a network error occurs during the first pass and retries are exhausted, the study progress of the reported sections is lost.
-- If the run is interrupted after the first pass, the courseware stays in a 0-duration but completed state, which is easy for teachers to spot manually.
+- This feature is based on observation of platform frontend behavior; platform updates may alter effectiveness at any time.
+- If a network failure occurs during the first stage and retries are exhausted, study records for reported sections may be lost.
+- Interrupting the execution after the first stage leaves the courseware completed with 0 duration, which can be identified during manual inspection.
 
 ## How It Works
 
@@ -107,17 +145,17 @@ Notes:
 sequenceDiagram
     autonumber
     actor User
-    participant Main as CLI Main
+    participant Runner as Runner (Web / CLI)
     participant CM as CourseManager
     participant DM as DataManager
     participant API as CourseAPI
     participant Server as ULearning Server
 
-    User->>Main: Select "Start Courseware"
-    Main->>CM: Invoke __start_course_ware()
+    User->>Runner: Start Courseware Task
+    Runner->>CM: Invoke Task Execution
     activate CM
 
-    Note over CM: Load UserConfig<br/>Iterate: Course -> Textbook -> Chapter -> Section
+    Note over CM: Load Configuration<br/>Iterate: Course -> Textbook -> Chapter -> Section
 
     opt Anti-detection enabled (per Textbook, off by default)
         Note over CM: First pass: sync with studyTime = 0<br/>for every page
@@ -154,7 +192,7 @@ sequenceDiagram
 
         CM->>API: sync_study_record(request_data)
         activate API
-        Note right of API: Call utils.sync_text_encrypt<br/>Encrypt payload (DES + Base64)
+        Note right of API: Encrypt payload (DES + Base64)
         API->>Server: POST /yws/api/personal/sync
         Server-->>API: Return Status "1" (Success)
         API-->>CM: Return True
@@ -163,8 +201,8 @@ sequenceDiagram
         Note over CM: Cooling down (Sleep Time)
     end
 
-    CM-->>Main: All Tasks Completed
-    Main-->>User: Show Success Message
+    CM-->>Runner: All Tasks Completed
+    Runner-->>User: Show Success State
     deactivate CM
 ```
 
@@ -172,5 +210,5 @@ sequenceDiagram
 
 By using this tool, you acknowledge that you understand the risks associated with using automation tools on ULearning platforms, and accept the following terms and conditions:
 
-- The author does not guarantee that using this tool will not be detected by the ULearning platform
-- Any consequences arising from the use of this tool, including but not limited to disciplinary action, are solely the responsibility of the user
+- The author does not guarantee that using this tool will not be detected by the ULearning platform.
+- Any consequences arising from the use of this tool, including but not limited to disciplinary action, are solely the responsibility of the user.
