@@ -479,6 +479,10 @@
 }
 
 /* 逐题型时长卡片列表 */
+.uc-duration-group {
+  container-type: inline-size;
+}
+
 .uc-duration-cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -489,7 +493,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 12px;
+  padding: 10px 10px 12px;
   border: 1px solid var(--console-line);
   border-radius: var(--radius-md);
   background: var(--surface-soft);
@@ -526,24 +530,34 @@
 
 .uc-duration-inputs {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 6px;
 }
 
-.uc-range-sep {
-  display: grid;
-  place-items: center;
-  color: var(--console-muted);
-  flex: none;
+.uc-duration-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
 }
 
-.uc-range-field {
+.uc-duration-field__label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 550;
+  line-height: 1;
+  color: var(--console-muted);
+  user-select: none;
+}
+
+.uc-duration-field__control {
   position: relative;
   display: flex;
   align-items: center;
-  flex: 1;
+  width: 100%;
   min-width: 0;
-  min-height: 44px;
+  height: 38px;
   padding: 0 8px;
   border: 1px solid var(--console-line);
   border-radius: var(--radius-sm);
@@ -551,49 +565,55 @@
   transition: border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
-.uc-range-field:focus-within {
+.uc-duration-field__control:focus-within {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-.uc-range-field__prefix {
-  font-size: 10px;
-  color: var(--console-muted);
-  flex: none;
-}
-
-.uc-range-field input::-webkit-outer-spin-button,
-.uc-range-field input::-webkit-inner-spin-button {
+.uc-duration-field__control input::-webkit-outer-spin-button,
+.uc-duration-field__control input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-.uc-range-field input {
+.uc-duration-field__control input {
   width: 100%;
   min-width: 0;
   height: 100%;
-  padding: 0 4px;
+  padding: 0 3px;
   border: 0;
   outline: 0;
   background: transparent;
   font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 650;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--console-ink);
   text-align: right;
   -moz-appearance: textfield;
   appearance: textfield;
 }
 
-.uc-range-field input[aria-invalid="true"] {
+.uc-duration-field__control input[aria-invalid="true"] {
   color: var(--danger);
 }
 
-.uc-range-field__unit {
-  font-size: 10px;
+.uc-duration-field__unit {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 550;
+  line-height: 1;
   color: var(--console-muted);
   flex: none;
   margin-left: 2px;
+  user-select: none;
+}
+
+.uc-range-sep {
+  display: grid;
+  place-items: center;
+  height: 38px;
+  color: var(--console-muted);
+  flex: none;
 }
 
 .uc-duration-card .uc-field__error {
@@ -676,6 +696,12 @@
   font-size: 12px;
   color: var(--ink-2);
   cursor: pointer;
+}
+
+@container (max-width: 520px) {
+  .uc-duration-cards {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 1000px) {

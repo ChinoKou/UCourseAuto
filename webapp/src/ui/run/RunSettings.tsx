@@ -265,7 +265,7 @@ export function RunSettings({ disabled, onValidityChange }: RunSettingsProps) {
                 </div>
 
                 {/* 逐题型学习时长 */}
-                <div className="uc-param-group">
+                <div className="uc-param-group uc-duration-group">
                   <div className="uc-param-group__title">
                     <span>逐题型学习时长</span>
                     <small>在区间内随机生成上报时间戳，单位为秒</small>
@@ -293,44 +293,48 @@ export function RunSettings({ disabled, onValidityChange }: RunSettingsProps) {
                           </div>
 
                           <div className="uc-duration-inputs">
-                            <div className="uc-range-field">
-                              <span className="uc-range-field__prefix">最短</span>
-                              <input
-                                type="number"
-                                inputMode="numeric"
-                                min={0}
-                                max={MAX_SECONDS}
-                                value={drafts[key].min}
-                                aria-label={`${typeMeta.label}最短秒数`}
-                                aria-invalid={errors.min !== null}
-                                disabled={disabled}
-                                onChange={(event) => {
-                                  updateRange(key, { min: event.currentTarget.value });
-                                }}
-                              />
-                              <span className="uc-range-field__unit">秒</span>
+                            <div className="uc-duration-field">
+                              <span className="uc-duration-field__label">最短</span>
+                              <div className="uc-duration-field__control">
+                                <input
+                                  type="number"
+                                  inputMode="numeric"
+                                  min={0}
+                                  max={MAX_SECONDS}
+                                  value={drafts[key].min}
+                                  aria-label={`${typeMeta.label}最短秒数`}
+                                  aria-invalid={errors.min !== null}
+                                  disabled={disabled}
+                                  onChange={(event) => {
+                                    updateRange(key, { min: event.currentTarget.value });
+                                  }}
+                                />
+                                <span className="uc-duration-field__unit">秒</span>
+                              </div>
                             </div>
 
                             <span className="uc-range-sep" aria-hidden="true">
-                              <IconArrowRight size={12} />
+                              <IconArrowRight size={13} />
                             </span>
 
-                            <div className="uc-range-field">
-                              <span className="uc-range-field__prefix">最长</span>
-                              <input
-                                type="number"
-                                inputMode="numeric"
-                                min={0}
-                                max={MAX_SECONDS}
-                                value={drafts[key].max}
-                                aria-label={`${typeMeta.label}最长秒数`}
-                                aria-invalid={errors.max !== null}
-                                disabled={disabled}
-                                onChange={(event) => {
-                                  updateRange(key, { max: event.currentTarget.value });
-                                }}
-                              />
-                              <span className="uc-range-field__unit">秒</span>
+                            <div className="uc-duration-field">
+                              <span className="uc-duration-field__label">最长</span>
+                              <div className="uc-duration-field__control">
+                                <input
+                                  type="number"
+                                  inputMode="numeric"
+                                  min={0}
+                                  max={MAX_SECONDS}
+                                  value={drafts[key].max}
+                                  aria-label={`${typeMeta.label}最长秒数`}
+                                  aria-invalid={errors.max !== null}
+                                  disabled={disabled}
+                                  onChange={(event) => {
+                                    updateRange(key, { max: event.currentTarget.value });
+                                  }}
+                                />
+                                <span className="uc-duration-field__unit">秒</span>
+                              </div>
                             </div>
                           </div>
 
