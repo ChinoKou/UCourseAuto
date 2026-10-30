@@ -30,6 +30,7 @@ import { ServerManager } from "@/ui/common/ServerManager";
 import { ServerSelect } from "@/ui/common/ServerSelect";
 import { useToast } from "@/ui/common/toast";
 import { addAccountWithLogin, restoreSession } from "@/usecases/signIn";
+import { isDgutSite, resolveUsernameValidation } from "./authValidation";
 
 export interface AuthScreenProps {
   mode: "login" | "add";
@@ -87,12 +88,17 @@ export function AuthScreen({ mode, onBack, restoreError }: AuthScreenProps) {
   const selectedSiteRef = sites.some((site) => site.ref === siteRef)
     ? siteRef
     : (sites.find((site) => site.ref === DEFAULT_SITE_REF)?.ref ?? sites[0].ref);
+  const selectedSite = sites.find((site) => site.ref === selectedSiteRef);
+  const isDgut = isDgutSite(selectedSite);
 
-  const usernameError =
-    touched.username && username.trim().length === 0 ? "请输入用户名" : null;
+  const { error: usernameError, warning: usernameWarning } =
+    resolveUsernameValidation(username, touched.username, isDgut);
   const passwordError =
     touched.password && password.length === 0 ? "请输入密码" : null;
   const busy = submitting || switching !== null;
+  const usernamePlaceholder = isDgut
+    ? "例如 dgut2099xxxxx"
+    : "优学院 账号或用户名";
 
   const loginAndSave = async (overwrite: boolean): Promise<void> => {
     const site = sites.find((item) => item.ref === selectedSiteRef);
@@ -382,12 +388,13 @@ export function AuthScreen({ mode, onBack, restoreError }: AuthScreenProps) {
 
             <TextField
               label="用户名"
-              placeholder="学号或登录名"
+              placeholder={usernamePlaceholder}
               autoComplete="username"
               autoCapitalize="none"
               spellCheck={false}
               value={username}
               error={usernameError}
+              warning={usernameWarning}
               disabled={busy}
               onChange={(event) => {
                 setUsername(event.currentTarget.value);

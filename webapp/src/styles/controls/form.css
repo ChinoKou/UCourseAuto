@@ -36,10 +36,22 @@
 }
 
 .uc-field__hint,
+.uc-field__warning,
 .uc-field__error {
   font-size: 11.5px;
   line-height: 1.45;
   color: var(--ink-3);
+}
+
+.uc-field__warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--warning);
+}
+
+.uc-field__warning svg {
+  flex: none;
 }
 
 .uc-field__error {
@@ -64,6 +76,16 @@
 .uc-input-shell:focus-within {
   border-color: var(--accent);
   box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.uc-input-shell.is-warning {
+  border-color: var(--warning);
+  box-shadow: 0 0 0 3px var(--warning-soft);
+}
+
+.uc-input-shell.is-warning:focus-within {
+  border-color: var(--warning);
+  box-shadow: 0 0 0 4px var(--warning-soft);
 }
 
 .uc-input-shell.is-invalid {
